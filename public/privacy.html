@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Privacy Policy for VortexScans API. We do not collect, store, or share personal data." />
+  <meta property="og:title" content="Privacy Policy — VortexScans API" />
+  <meta property="og:description" content="Privacy Policy for VortexScans API. We do not collect, store, or share personal data." />
+  <meta property="og:image" content="https://vortexscans.vercel.app/og-image.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — VortexScans API</title>
+  <meta name="theme-color" content="#0A0A12" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#0A0A12;--bg2:#111120;--text:#E2E8F0;--text2:#94A3B8;--text3:#64748B;--purple:#A855F7;--pink:#EC4899;--border:rgba(255,255,255,.06);--glass:rgba(255,255,255,.03)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
+    .ambient{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.08}
+    .orb-1{width:500px;height:500px;background:var(--purple);top:-150px;left:-100px}
+    .orb-2{width:400px;height:400px;background:var(--pink);bottom:-100px;right:-80px}
+    header{position:sticky;top:0;z-index:100;background:rgba(10,10,18,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0 24px}
+    .header-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;height:60px}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:1rem}
+    .logo span{background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .content{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:60px 24px 80px}
+    h1{font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:8px}
+    .updated{color:var(--text3);font-size:.82rem;margin-bottom:40px;font-family:'JetBrains Mono',monospace}
+    h2{font-size:1.2rem;font-weight:700;margin:32px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
+    h2:first-of-type{border-top:none;padding-top:0}
+    p{color:var(--text2);font-size:.92rem;margin-bottom:16px}
+    ul{color:var(--text2);font-size:.92rem;margin:0 0 16px 20px}
+    li{margin-bottom:6px}
+    code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:rgba(168,85,247,.1);color:var(--purple);padding:2px 6px;border-radius:4px}
+    a{color:var(--purple);text-decoration:none}
+    a:hover{text-decoration:underline}
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--text3);font-size:.75rem}
+  </style>
+</head>
+<body>
+  <div class="ambient"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+  <header><div class="header-inner"><a href="/" class="logo">&#128214; <span>Vortex</span>Scans API</a></div></header>
+  <div class="content">
+    <h1>Privacy Policy</h1>
+    <div class="updated">Last updated: 2026-06-11</div>
+
+    <h2>1. Overview</h2>
+    <p>VortexScans API ("the Service") is a free, open-source REST API that provides manga and manhwa data by aggregating information from Vortex Scans. This Privacy Policy explains how we handle data when you use the Service.</p>
+
+    <h2>2. Data We Collect</h2>
+    <p>The Service is designed to be <strong>stateless and privacy-preserving</strong>. We do not collect, store, or process any personal data from API consumers.</p>
+    <ul>
+      <li><strong>No user accounts</strong> — The API requires no authentication, registration, or API keys.</li>
+      <li><strong>No cookies</strong> — We do not set tracking cookies on API responses.</li>
+      <li><strong>No analytics</strong> — We do not use Google Analytics, Mixpanel, or any third-party analytics on API endpoints.</li>
+      <li><strong>No logging of personal data</strong> — Server logs may contain IP addresses and request paths (standard Vercel/Node.js behavior), but these are not stored, sold, or shared.</li>
+    </ul>
+
+    <h2>3. Third-Party Data Sources</h2>
+    <p>The Service fetches data from <code>api.vortexscans.org</code> and <code>vortexscans.org</code>. This data (manga titles, descriptions, images, chapter information) belongs to the respective content owners. We do not claim ownership of this data.</p>
+    <p>If you are a content owner and wish to have your data removed from this API, please open an issue on our <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
+
+    <h2>4. Data Storage</h2>
+    <p>The Service uses a simple in-memory cache (5-minute TTL) to reduce repeated API calls. This cache is:</p>
+    <ul>
+      <li>Purely temporary and reset on every server restart</li>
+      <li>Not persisted to any database</li>
+      <li>Not associated with any user identity</li>
+    </ul>
+
+    <h2>5. Data Sharing</h2>
+    <p>We do not sell, trade, or share any data with third parties. The API is provided as-is for educational and development purposes.</p>
+
+    <h2>6. Children's Privacy</h2>
+    <p>The Service is not directed at children under 13. We do not knowingly collect information from children under 13.</p>
+
+    <h2>7. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last updated" date.</p>
+
+    <h2>8. Contact</h2>
+    <p>For questions about this Privacy Policy, open an issue at <a href="https://github.com/Shineii86/VortexScansAPI/issues" target="_blank" rel="noopener noreferrer">github.com/Shineii86/VortexScansAPI/issues</a>.</p>
+  </div>
+  <footer>&copy; 2026 VortexScans API &middot; <a href="/" style="color:var(--purple)">Home</a> &middot; <a href="/tos" style="color:var(--purple)">Terms</a></footer>
+</body>
+</html>

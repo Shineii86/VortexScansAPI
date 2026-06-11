@@ -1,0 +1,6 @@
+# VortexScans API — https://vortexscans.vercel.app
+User-agent: *
+Allow: /
+Disallow: /api
+
+Sitemap: https://vortexscans.vercel.app/sitemap.xml

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — VortexScans API</title>
+  <meta name="theme-color" content="#0A0A12" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#0A0A12;--text:#E2E8F0;--text2:#94A3B8;--text3:#64748B;--purple:#A855F7;--pink:#EC4899;--indigo:#6366F1;--green:#22C55E;--red:#EF4444;--border:rgba(255,255,255,.06);--glass:rgba(255,255,255,.03)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .ambient{position:fixed;inset:0;pointer-events:none}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.1}
+    .orb-1{width:500px;height:500px;background:var(--purple);top:-150px;left:-100px;animation:drift 24s ease-in-out infinite}
+    .orb-2{width:400px;height:400px;background:var(--pink);bottom:-100px;right:-80px;animation:drift 20s ease-in-out infinite reverse}
+    @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.08)}}
+    .container{position:relative;z-index:1;text-align:center;padding:40px;max-width:560px}
+    .code{font-size:clamp(6rem,18vw,14rem);font-weight:900;line-height:1;letter-spacing:-.06em;background:linear-gradient(135deg,var(--purple),var(--pink),var(--indigo));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:float 4s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .title{font-size:1.4rem;font-weight:700;margin:16px 0 8px}
+    .desc{color:var(--text2);font-size:.95rem;margin-bottom:32px;line-height:1.7}
+    .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.88rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit}
+    .btn svg{width:16px;height:16px}
+    .btn-primary{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;box-shadow:0 4px 24px rgba(168,85,247,.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(168,85,247,.4)}
+    .btn-ghost{background:var(--glass);border:1px solid rgba(255,255,255,.1);color:var(--text)}
+    .btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg)}
+    .glitch::before{left:2px;text-shadow:-2px 0 var(--pink);clip-path:inset(0 0 0 0);animation:glitch-1 2s infinite linear alternate-reverse}
+    .glitch::after{left:-2px;text-shadow:2px 0 var(--indigo);clip-path:inset(0 0 0 0);animation:glitch-2 3s infinite linear alternate-reverse}
+    @keyframes glitch-1{0%{clip-path:inset(40% 0 61% 0)}20%{clip-path:inset(92% 0 1% 0)}40%{clip-path:inset(43% 0 1% 0)}60%{clip-path:inset(25% 0 58% 0)}80%{clip-path:inset(54% 0 7% 0)}100%{clip-path:inset(58% 0 43% 0)}}
+    @keyframes glitch-2{0%{clip-path:inset(65% 0 13% 0)}20%{clip-path:inset(79% 0 2% 0)}40%{clip-path:inset(48% 0 38% 0)}60%{clip-path:inset(33% 0 2% 0)}80%{clip-path:inset(16% 0 62% 0)}100%{clip-path:inset(27% 0 42% 0)}}
+    .status-line{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;color:var(--text3);font-size:.78rem;font-family:'JetBrains Mono',monospace}
+    .status-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .scanline{position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
+  </style>
+</head>
+<body>
+  <div class="ambient"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+  <div class="scanline"></div>
+  <div class="container">
+    <div class="code"><span class="glitch" data-text="404">404</span></div>
+    <div class="title">Endpoint Not Found</div>
+    <div class="desc">The path you requested doesn't exist in the VortexScans API.<br/>Check the documentation or try a valid endpoint.</div>
+    <div class="actions">
+      <a href="/" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+      <a href="/api" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        API Status
+      </a>
+      <a href="https://github.com/Shineii86/VortexScansAPI#readme" target="_blank" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        Docs
+      </a>
+    </div>
+    <div class="status-line"><span class="status-dot"></span> HTTP 404 &middot; Not Found</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ──────────────── OG Meta ──────────────── -->
+  <meta property="og:title" content="VortexScans API — Swagger UI Documentation">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vortexscans.vercel.app/docs">
+  <meta property="og:image" content="https://vortexscans.vercel.app/og-image.png">
+  <meta property="og:description" content="Interactive Swagger UI documentation for VortexScans API. Test all 10 endpoints directly from the browser.">
+  <meta property="og:site_name" content="VortexScans API">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VortexScans API — Swagger UI Documentation">
+  <meta name="twitter:description" content="Interactive Swagger UI documentation for VortexScans API.">
+  <meta name="twitter:image" content="https://vortexscans.vercel.app/og-image.png">
+  <meta name="description" content="Interactive Swagger UI documentation for VortexScans API. Test all 10 endpoints directly from the browser.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0b1622">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512x512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="canonical" href="https://vortexscans.vercel.app/docs">
+
+  <title>VortexScans API — Swagger UI</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+  <style>
+    :root {
+      --bg: #0b1622;
+      --bg2: #0f172a;
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+
+    /* ──────────────── BASE ──────────────── */
+    html { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: inherit; }
+    body {
+      margin: 0; padding: 0;
+      background: var(--bg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ──────────────── CUSTOM HEADER ──────────────── */
+    .docs-header {
+      background: linear-gradient(135deg, var(--bg2), #1e1b4b);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 20px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .docs-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .docs-logo {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 900; font-size: 16px;
+    }
+    .docs-title { color: var(--text); font-weight: 700; font-size: 1em; }
+    .docs-subtitle { color: var(--muted); font-size: 0.8em; margin-left: 8px; }
+    .docs-links { display: flex; gap: 16px; }
+    .docs-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.85em;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .docs-links a:hover { color: var(--accent); }
+
+    /* ──────────────── SWAGGER UI OVERRIDES ──────────────── */
+    .swagger-ui .topbar { display: none; }
+    .swagger-ui .info .title { color: var(--text) !important; }
+    .swagger-ui .info .description p { color: var(--muted) !important; }
+    .swagger-ui .scheme-container { background: rgba(15, 23, 42, 0.5) !important; box-shadow: none !important; }
+    .swagger-ui .opblock-tag { color: var(--accent) !important; border-color: rgba(255,255,255,0.05) !important; }
+    .swagger-ui .opblock .opblock-summary-description { color: var(--muted) !important; }
+    .swagger-ui .btn { box-shadow: none !important; }
+    .swagger-ui .btn.execute { background: linear-gradient(135deg, var(--accent), var(--accent2)) !important; }
+    .swagger-ui .model-box { background: rgba(15, 23, 42, 0.3) !important; }
+    .swagger-ui .scheme-container .schemes > select { color: var(--text); background: var(--bg2); }
+
+    /* ──────────────── BACK LINK ──────────────── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--accent); text-decoration: none;
+      font-size: 0.85em; font-weight: 500;
+      margin-left: 12px;
+    }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- ──────────────── CUSTOM HEADER ──────────────── -->
+  <div class="docs-header">
+    <div style="display: flex; align-items: center;">
+      <a href="/" class="docs-brand">
+        <img src="/icon.svg" alt="VortexScans" class="docs-logo" style="object-fit:contain; filter:brightness(0) invert();">
+        <span class="docs-title">VortexScans API</span>
+      </a>
+      <span class="docs-subtitle">Swagger UI Documentation</span>
+    </div>
+    <div class="docs-links">
+      <a href="/">Home</a>
+      <a href="/openapi.json">OpenAPI Spec</a>
+      <a href="/api">Health</a>
+      <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <!-- ──────────────── SWAGGER UI ──────────────── -->
+  <div id="swagger-ui"></div>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script>
+    SwaggerUIBundle({
+      url: "/openapi.json",
+      dom_id: "#swagger-ui",
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIBundle.SwaggerUIStandalonePreset
+      ],
+      layout: "BaseLayout",
+      deepLinking: true,
+      defaultModelsExpandDepth: -1,
+      docExpansion: "list",
+      filter: true,
+      tryItOutEnabled: true,
+    });
+  </script>
+</body>
+</html>

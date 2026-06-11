@@ -1,0 +1,145 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "VortexScans API",
+    "description": "Free RESTful API for manga, manhwa, and manhua data. Powered by Vortex Scans.",
+    "version": "3.0.0",
+    "contact": {
+      "name": "Shineii86",
+      "url": "https://github.com/Shineii86/VortexScansAPI"
+    },
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://vortexscans.vercel.app",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/api": {
+      "get": {
+        "tags": ["System"],
+        "summary": "API information and documentation",
+        "operationId": "getApiInfo",
+        "responses": {
+          "200": {
+            "description": "API documentation with all endpoints",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/api/home": {
+      "get": {
+        "tags": ["Collections"],
+        "summary": "Home page data (latest, hot, top rated)",
+        "operationId": "getHome",
+        "responses": {
+          "200": { "description": "Latest, hot, and top rated manga with genres" }
+        }
+      }
+    },
+    "/api/manga": {
+      "get": {
+        "tags": ["Manga"],
+        "summary": "List, detail, or chapters for manga",
+        "operationId": "getManga",
+        "parameters": [
+          { "name": "slug", "in": "query", "schema": { "type": "string" }, "description": "Manga slug for detail/chapters" },
+          { "name": "action", "in": "query", "schema": { "type": "string", "enum": ["chapters"] }, "description": "Use 'chapters' for chapter list" },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 48, "maximum": 100 } },
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "description": "Search keyword" },
+          { "name": "type", "in": "query", "schema": { "type": "string", "enum": ["manhwa", "manga", "manhua"] } },
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["ongoing", "hiatus", "completed"] } },
+          { "name": "genre", "in": "query", "schema": { "type": "string" } },
+          { "name": "order", "in": "query", "schema": { "type": "string" } },
+          { "name": "direction", "in": "query", "schema": { "type": "string", "enum": ["asc", "desc"] } },
+          { "name": "hot", "in": "query", "schema": { "type": "string", "enum": ["true", "false"] } }
+        ],
+        "responses": {
+          "200": { "description": "Manga list, detail, or chapters" }
+        }
+      }
+    },
+    "/api/chapter": {
+      "get": {
+        "tags": ["Chapters"],
+        "summary": "Chapter images and navigation",
+        "operationId": "getChapter",
+        "parameters": [
+          { "name": "slug", "in": "query", "required": true, "schema": { "type": "string" }, "description": "Manga slug" },
+          { "name": "chapter", "in": "query", "required": true, "schema": { "type": "string" }, "description": "Chapter slug (e.g. chapter-1)" }
+        ],
+        "responses": {
+          "200": { "description": "Chapter page images with prev/next navigation" }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "tags": ["Search & Discovery"],
+        "summary": "Search manga by keyword",
+        "operationId": "searchManga",
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" }, "description": "Search query" },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20, "maximum": 100 } }
+        ],
+        "responses": {
+          "200": { "description": "Search results with pagination" }
+        }
+      }
+    },
+    "/api/filter": {
+      "get": {
+        "tags": ["Search & Discovery"],
+        "summary": "Advanced filter by type, status, genre",
+        "operationId": "filterManga",
+        "parameters": [
+          { "name": "type", "in": "query", "schema": { "type": "string", "enum": ["manhwa", "manga", "manhua"] } },
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["ongoing", "hiatus", "completed"] } },
+          { "name": "genre", "in": "query", "schema": { "type": "string" } },
+          { "name": "sort", "in": "query", "schema": { "type": "string" } },
+          { "name": "direction", "in": "query", "schema": { "type": "string", "enum": ["asc", "desc"] } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 48, "maximum": 100 } }
+        ],
+        "responses": {
+          "200": { "description": "Filtered results with pagination" }
+        }
+      }
+    },
+    "/api/genres": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "All available genres",
+        "operationId": "getGenres",
+        "responses": {
+          "200": { "description": "List of all genres with IDs" }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "Statuses, types, and sort options",
+        "operationId": "getStatus",
+        "responses": {
+          "200": { "description": "Available statuses, types, and sort options" }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "System", "description": "API info and health" },
+    { "name": "Collections", "description": "Home page data (latest, hot, top rated)" },
+    { "name": "Manga", "description": "List, detail, and chapters" },
+    { "name": "Chapters", "description": "Chapter images and navigation" },
+    { "name": "Search & Discovery", "description": "Search and advanced filtering" },
+    { "name": "Metadata", "description": "Genres, statuses, and sort options" }
+  ]
+}

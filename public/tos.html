@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Terms of Service for VortexScans API. Acceptable use, rate limits, liability, and DMCA policy." />
+  <meta property="og:title" content="Terms of Service — VortexScans API" />
+  <meta property="og:description" content="Terms of Service for VortexScans API. Acceptable use, rate limits, liability, and DMCA policy." />
+  <meta property="og:image" content="https://vortexscans.vercel.app/og-image.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — VortexScans API</title>
+  <meta name="theme-color" content="#0A0A12" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#0A0A12;--bg2:#111120;--text:#E2E8F0;--text2:#94A3B8;--text3:#64748B;--purple:#A855F7;--pink:#EC4899;--border:rgba(255,255,255,.06);--glass:rgba(255,255,255,.03)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
+    .ambient{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.08}
+    .orb-1{width:500px;height:500px;background:var(--purple);top:-150px;left:-100px}
+    .orb-2{width:400px;height:400px;background:var(--pink);bottom:-100px;right:-80px}
+    header{position:sticky;top:0;z-index:100;background:rgba(10,10,18,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0 24px}
+    .header-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;height:60px}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:1rem}
+    .logo span{background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .content{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:60px 24px 80px}
+    h1{font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:8px}
+    .updated{color:var(--text3);font-size:.82rem;margin-bottom:40px;font-family:'JetBrains Mono',monospace}
+    h2{font-size:1.2rem;font-weight:700;margin:32px 0 12px;padding-top:16px;border-top:1px solid var(--border)}
+    h2:first-of-type{border-top:none;padding-top:0}
+    p{color:var(--text2);font-size:.92rem;margin-bottom:16px}
+    ul{color:var(--text2);font-size:.92rem;margin:0 0 16px 20px}
+    li{margin-bottom:6px}
+    code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:rgba(168,85,247,.1);color:var(--purple);padding:2px 6px;border-radius:4px}
+    a{color:var(--purple);text-decoration:none}
+    a:hover{text-decoration:underline}
+    strong{color:var(--text)}
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:24px;text-align:center;color:var(--text3);font-size:.75rem}
+  </style>
+</head>
+<body>
+  <div class="ambient"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+  <header><div class="header-inner"><a href="/" class="logo">&#128214; <span>Vortex</span>Scans API</a></div></header>
+  <div class="content">
+    <h1>Terms of Service</h1>
+    <div class="updated">Last updated: 2026-06-11</div>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing or using VortexScans API ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
+
+    <h2>2. Description of Service</h2>
+    <p>VortexScans API is a free, open-source REST API that provides manga and manhwa data by aggregating information from Vortex Scans. The Service is provided "as is" without warranties of any kind.</p>
+
+    <h2>3. Educational Purpose</h2>
+    <p>The Service is built and maintained for <strong>educational and learning purposes only</strong>. It demonstrates API design, web scraping techniques, and serverless deployment.</p>
+
+    <h2>4. No Affiliation</h2>
+    <p>The Service is <strong>not affiliated with, endorsed by, or connected to</strong> vortexscans.org, Vortex Scans, or any of its subsidiaries or affiliates. All trademarks and content belong to their respective owners.</p>
+
+    <h2>5. Third-Party Content</h2>
+    <p>All manga data, images, descriptions, and other content displayed through the API belong to their respective copyright holders (Vortex Scans). The Service does not host, store, or distribute any copyrighted media.</p>
+
+    <h2>6. Acceptable Use</h2>
+    <p>You agree to use the Service responsibly and in compliance with all applicable laws. You must not:</p>
+    <ul>
+      <li>Use the Service for any illegal purpose</li>
+      <li>Attempt to disrupt or overload the Service</li>
+      <li>Scrape the Service to build a competing product</li>
+      <li>Redistribute copyrighted content obtained through the Service</li>
+      <li>Use the Service to infringe on the rights of others</li>
+    </ul>
+
+    <h2>7. Rate Limiting</h2>
+    <p>The Service uses in-memory caching with configurable TTL. Rate limiting may be enforced to prevent abuse. Exceeding reasonable limits may result in temporary blocking.</p>
+
+    <h2>8. Availability</h2>
+    <p>The Service is hosted on Vercel's free tier and may experience downtime. We do not guarantee 100% availability. The Service may be modified, updated, or discontinued at any time without notice.</p>
+
+    <h2>9. Limitation of Liability</h2>
+    <p>In no event shall the creators of VortexScans API be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Service.</p>
+
+    <h2>10. Intellectual Property</h2>
+    <p>The source code of VortexScans API is open source and available on <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" rel="noopener noreferrer">GitHub</a> under the repository's license terms.</p>
+
+    <h2>11. DMCA / Takedowns</h2>
+    <p>If you believe your copyrighted content is being displayed through this API without authorization, please open an issue at <a href="https://github.com/Shineii86/VortexScansAPI/issues" target="_blank" rel="noopener noreferrer">github.com/Shineii86/VortexScansAPI/issues</a> and we will promptly remove it.</p>
+
+    <h2>12. Changes to Terms</h2>
+    <p>We reserve the right to modify these Terms at any time. Changes will be posted on this page with an updated "Last updated" date.</p>
+
+    <h2>13. Contact</h2>
+    <p>For questions about these Terms, open an issue at <a href="https://github.com/Shineii86/VortexScansAPI/issues" target="_blank" rel="noopener noreferrer">github.com/Shineii86/VortexScansAPI/issues</a>.</p>
+  </div>
+  <footer>&copy; 2026 VortexScans API &middot; <a href="/" style="color:var(--purple)">Home</a> &middot; <a href="/privacy" style="color:var(--purple)">Privacy</a></footer>
+</body>
+</html>

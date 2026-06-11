@@ -1,0 +1,28 @@
+{
+  "name": "VortexScans API",
+  "short_name": "VortexScans API",
+  "description": "Free REST API for manga, manhwa, and manhua data. 10 endpoints, 355+ titles, chapter images. No API key required.",
+  "start_url": "/",
+  "display": "standalone",
+  "id": "/",
+  "scope": "/",
+  "lang": "en",
+  "orientation": "any",
+  "background_color": "#0A0A12",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["developer", "entertainment"]
+}

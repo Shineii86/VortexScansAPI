@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.0.0] - 2026-06-11
+
+### Added
+- `public/index.html` - Full landing page with hero, features, endpoint explorer, playground
+- `public/404.html` - Custom 404 error page with glitch animation
+- `public/docs.html` - Swagger UI interactive documentation
+- `public/privacy.html` - Privacy policy page
+- `public/tos.html` - Terms of service page
+- `public/openapi.json` - OpenAPI 3.0.3 specification
+- `public/robots.txt` - SEO crawl rules
+- `public/sitemap.xml` - XML sitemap for search engines
+- `public/manifest.json` - PWA manifest
+
+### Changed
+- Updated `vercel.json` to serve static files from public directory
+- Added static file routes for docs, privacy, tos, sitemap, robots, openapi
+
 ## [3.1.0] - 2026-06-11
 
 ### Changed

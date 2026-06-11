@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VortexScans API — Free Manga/Manhwa REST API</title>
+
+  <!-- ──────────────── Basic OG Tags ──────────────── -->
+  <meta property="og:title" content="VortexScans API — Free Manga/Manhwa REST API" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vortexscans.vercel.app" />
+  <meta property="og:image" content="https://vortexscans.vercel.app/og-image.png" />
+  <meta property="og:description" content="Free RESTful API for manga, manhwa, and manhua data. 10 endpoints, 355+ titles, chapter images. Powered by Vortex Scans." />
+  <meta property="og:site_name" content="VortexScans API" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- ──────────────── Image Optimization ──────────────── -->
+  <meta property="og:image:secure_url" content="https://vortexscans.vercel.app/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="VortexScans API - Free Manga/Manhwa REST API" />
+
+  <!-- ──────────────── Twitter Card Tags ──────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Shineii86" />
+  <meta name="twitter:creator" content="@Shineii86" />
+  <meta name="twitter:title" content="VortexScans API — Free Manga/Manhwa REST API" />
+  <meta name="twitter:description" content="Free RESTful API for manga, manhwa, and manhua data. 10 endpoints, 355+ titles, chapter images." />
+  <meta name="twitter:image" content="https://vortexscans.vercel.app/og-image.png" />
+  <meta name="twitter:image:alt" content="VortexScans API - Free Manga/Manhwa REST API" />
+  <meta name="twitter:domain" content="vortexscans.vercel.app" />
+
+  <!-- ──────────────── Generic Meta ──────────────── -->
+  <meta name="description" content="Free RESTful API for manga, manhwa, and manhua data. 10 endpoints, 355+ titles, chapter images. Powered by Vortex Scans." />
+  <meta name="author" content="Shinei Nouzen" />
+  <meta name="keywords" content="manga api, manhwa api, manhua api, free api, rest api, manga data, chapter images, vortex scans, webtoon" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0b1622" />
+  <link rel="canonical" href="https://vortexscans.vercel.app" />
+
+  <!-- ──────────────── Favicon ──────────────── -->
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512x512.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- ──────────────── Fonts ──────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0b1622;--bg2:#0f172a;--bg3:#1e293b;
+      --surface:rgba(15,23,42,.7);--glass:rgba(255,255,255,.03);
+      --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
+      --text:#E2E8F0;--text2:#94A3B8;--text3:#64748B;
+      --accent:#38bdf8;--accent2:#818cf8;--pink:#EC4899;
+      --green:#22C55E;--cyan:#06B6D4;--amber:#F59E0B;--red:#EF4444;
+      --grad:linear-gradient(135deg,var(--accent),var(--accent2));
+      --grad2:linear-gradient(135deg,var(--accent2),#a78bfa);
+      --radius:12px;--radius-lg:16px;--radius-xl:20px;
+    }
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+    ::selection{background:rgba(56,189,248,.3);color:#fff}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.15)}
+
+    /* ── Ambient ── */
+    .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.12}
+    .orb-1{width:700px;height:700px;background:var(--accent);top:-250px;left:-200px;animation:drift 30s ease-in-out infinite}
+    .orb-2{width:500px;height:500px;background:var(--accent2);bottom:-200px;right:-150px;animation:drift 25s ease-in-out infinite reverse}
+    .orb-3{width:400px;height:400px;background:#a78bfa;top:40%;left:40%;animation:drift 22s ease-in-out infinite 5s}
+    @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(50px,-40px) scale(1.1)}66%{transform:translate(-30px,30px) scale(.92)}}
+
+    /* ── Particles Canvas ── */
+    #particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+    /* ── Layout ── */
+    .wrap{position:relative;z-index:1}
+    .container{max-width:1120px;margin:0 auto;padding:0 24px}
+
+    /* ── Header ── */
+    header{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 24px;transition:all .35s}
+    header.scrolled{background:rgba(11,22,34,.88);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border)}
+    .header-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+    .logo img{width:28px;height:28px;border-radius:6px}
+    .logo-text{font-size:1.1rem;font-weight:700;letter-spacing:-.02em}
+    .logo-text span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    nav{display:flex;align-items:center;gap:4px}
+    nav a{color:var(--text2);text-decoration:none;font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:8px;transition:all .2s}
+    nav a:hover{color:var(--text);background:var(--glass)}
+    nav a.active{color:var(--accent)}
+    .nav-cta{margin-left:8px;background:var(--grad)!important;color:#fff!important;padding:7px 16px!important;border-radius:8px!important;font-weight:600!important}
+    .nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+
+    /* ── Hero ── */
+    .hero{padding:140px 0 80px;text-align:center;position:relative}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--glass);border:1px solid var(--border);padding:6px 16px;border-radius:100px;font-size:.75rem;color:var(--text2);margin-bottom:24px}
+    .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .hero h1{font-size:clamp(2.5rem,5.5vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-.04em;margin-bottom:20px}
+    .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-sub{color:var(--text2);font-size:1.05rem;max-width:540px;margin:0 auto 40px;line-height:1.7}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.88rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .25s;font-family:inherit}
+    .btn svg{width:16px;height:16px}
+    .btn-primary{background:var(--grad);color:#fff;box-shadow:0 4px 24px rgba(56,189,248,.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(56,189,248,.4)}
+    .btn-ghost{background:var(--glass);border:1px solid var(--border2);color:var(--text)}
+    .btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+
+    /* ── Console ── */
+    .console{max-width:720px;margin:0 auto;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border2);background:var(--bg2);box-shadow:0 24px 80px rgba(0,0,0,.5),0 0 120px rgba(56,189,248,.08)}
+    .console-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+    .console-dot{width:10px;height:10px;border-radius:50%}
+    .console-dot:nth-child(1){background:#FF5F57}
+    .console-dot:nth-child(2){background:#FEBC2E}
+    .console-dot:nth-child(3){background:#28C840}
+    .console-title{margin-left:12px;font-size:.72rem;color:var(--text3);font-family:'JetBrains Mono',monospace}
+    .console-body{display:flex;min-height:180px}
+    .console-input{flex:1;padding:18px;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.8;color:var(--text);border:none;background:transparent;resize:none;outline:none}
+    .console-input::placeholder{color:var(--text3)}
+    .console-output{flex:1;padding:18px;border-left:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:var(--green);overflow:auto;max-height:300px;white-space:pre-wrap}
+    .console-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--border);background:rgba(255,255,255,.01)}
+    .console-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.75rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
+    .console-btn:hover{background:var(--glass);color:var(--text)}
+    .console-btn.active{background:rgba(56,189,248,.15);color:var(--accent);border-color:rgba(56,189,248,.3)}
+    .console-send{margin-left:auto;padding:6px 16px;border-radius:6px;border:none;background:var(--grad);color:#fff;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
+    .console-send:hover{opacity:.9;transform:translateY(-1px)}
+
+    /* ── Stats ── */
+    .stats{padding:60px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+    .stat-value{font-size:2rem;font-weight:900;letter-spacing:-.03em}
+    .stat-value.grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stat-label{font-size:.78rem;color:var(--text3);margin-top:4px;font-weight:500}
+
+    /* ── Section ── */
+    .section{padding:100px 0}
+    .section-label{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:700;margin-bottom:12px}
+    .section-title{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:10px;line-height:1.2}
+    .section-desc{color:var(--text2);font-size:1rem;max-width:520px;line-height:1.7;margin-bottom:40px}
+
+    /* ── Features Grid ── */
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;transition:all .35s;position:relative;overflow:hidden}
+    .feature-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(56,189,248,.05),rgba(129,140,248,.05));opacity:0;transition:opacity .35s}
+    .feature-card:hover{border-color:rgba(56,189,248,.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.3)}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;z-index:1}
+    .feature-icon svg{width:22px;height:22px}
+    .fi-accent{background:rgba(56,189,248,.12);color:var(--accent)}
+    .fi-accent2{background:rgba(129,140,248,.12);color:var(--accent2)}
+    .fi-green{background:rgba(34,197,94,.12);color:var(--green)}
+    .fi-cyan{background:rgba(6,182,212,.12);color:var(--cyan)}
+    .fi-amber{background:rgba(245,158,11,.12);color:var(--amber)}
+    .fi-pink{background:rgba(236,72,153,.12);color:var(--pink)}
+    .feature-title{font-size:1rem;font-weight:700;margin-bottom:8px;position:relative;z-index:1}
+    .feature-desc{color:var(--text2);font-size:.84rem;line-height:1.7;position:relative;z-index:1}
+
+    /* ── Endpoint Explorer ── */
+    .explorer{display:grid;grid-template-columns:240px 1fr;gap:1px;background:var(--border);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)}
+    .explorer-nav{background:var(--bg2);padding:8px}
+    .explorer-nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;border:none;background:transparent;color:var(--text2);font-size:.8rem;font-weight:500;border-radius:8px;cursor:pointer;transition:all .2s;text-align:left;font-family:inherit}
+    .explorer-nav-btn:hover{background:var(--glass);color:var(--text)}
+    .explorer-nav-btn.active{background:rgba(56,189,248,.1);color:var(--accent)}
+    .explorer-nav-btn svg{width:16px;height:16px;flex-shrink:0}
+    .explorer-panel{background:var(--bg2);padding:24px;min-height:400px}
+    .explorer-panel-title{font-size:1.1rem;font-weight:700;margin-bottom:4px}
+    .explorer-panel-desc{color:var(--text2);font-size:.84rem;margin-bottom:20px;line-height:1.6}
+    .explorer-method{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.04em;margin-bottom:12px}
+    .method-get{background:rgba(34,197,94,.12);color:var(--green)}
+    .explorer-path{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text);margin-bottom:16px;padding:12px 16px;background:rgba(0,0,0,.3);border-radius:8px;border:1px solid var(--border)}
+    .explorer-params{margin-bottom:16px}
+    .explorer-params-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:600;margin-bottom:8px}
+    .param-row{display:grid;grid-template-columns:120px 80px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.8rem}
+    .param-name{font-family:'JetBrains Mono',monospace;color:var(--pink);font-weight:500}
+    .param-type{font-family:'JetBrains Mono',monospace;color:var(--accent2);font-size:.75rem}
+    .param-desc{color:var(--text2)}
+    .explorer-code{background:rgba(0,0,0,.3);border-radius:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:var(--text2);overflow-x:auto;border:1px solid var(--border)}
+    .explorer-code .kw{color:var(--accent2)}
+    .explorer-code .str{color:var(--green)}
+    .explorer-code .cmt{color:var(--text3)}
+
+    /* ── Code Tabs ── */
+    .code-tabs{display:flex;gap:2px;background:rgba(0,0,0,.2);border-radius:8px;padding:3px;margin-bottom:12px;width:fit-content}
+    .code-tab{padding:6px 14px;border-radius:6px;border:none;background:transparent;color:var(--text3);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'JetBrains Mono',monospace}
+    .code-tab.active{background:rgba(56,189,248,.15);color:var(--accent)}
+    .code-tab:hover:not(.active){color:var(--text2)}
+    .code-block{display:none}
+    .code-block.active{display:block}
+
+    /* ── Playground ── */
+    .playground-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+    .playground-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+    .playground-header svg{width:18px;height:18px;color:var(--accent)}
+    .playground-header h3{font-size:1rem;font-weight:700}
+    .playground-body{padding:24px}
+    .playground-inputs{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+    .playground-inputs input,.playground-inputs select{flex:1;min-width:200px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(0,0,0,.3);color:var(--text);font-size:.85rem;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color .2s}
+    .playground-inputs input:focus,.playground-inputs select:focus{border-color:var(--accent)}
+    .playground-inputs input::placeholder{color:var(--text3)}
+    .playground-inputs select option{background:var(--bg2)}
+    .playground-output{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.7;color:var(--green);max-height:400px;overflow:auto;white-space:pre-wrap;display:none}
+    .playground-output.visible{display:block}
+
+    /* ── Marquee ── */
+    .marquee{padding:40px 0;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .marquee-track{display:flex;gap:40px;animation:marquee 30s linear infinite;width:max-content}
+    .marquee-item{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:.8rem;font-weight:500;white-space:nowrap}
+    .marquee-item svg{width:16px;height:16px;opacity:.5}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* ── CTA ── */
+    .cta{text-align:center;padding:100px 0}
+    .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:60px 40px;position:relative;overflow:hidden}
+    .cta-box::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(129,140,248,.08))}
+    .cta-title{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px;position:relative}
+    .cta-desc{color:var(--text2);font-size:1rem;margin-bottom:28px;position:relative}
+    .cta-actions{display:flex;gap:12px;justify-content:center;position:relative}
+
+    /* ── Footer ── */
+    footer{padding:60px 0 40px;border-top:1px solid var(--border)}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    .footer-brand .logo{margin-bottom:12px}
+    .footer-brand p{color:var(--text3);font-size:.82rem;line-height:1.7;max-width:280px}
+    .footer-col h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-weight:600;margin-bottom:16px}
+    .footer-col a{display:block;color:var(--text2);text-decoration:none;font-size:.84rem;padding:4px 0;transition:color .2s}
+    .footer-col a:hover{color:var(--accent)}
+    .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border);color:var(--text3);font-size:.75rem}
+    .footer-social{display:flex;gap:12px}
+    .footer-social a{color:var(--text3);transition:color .2s}
+    .footer-social a:hover{color:var(--accent)}
+    .footer-social svg{width:18px;height:18px}
+
+    /* ── Scroll Reveal ── */
+    .reveal{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal-delay-1{transition-delay:.1s}
+    .reveal-delay-2{transition-delay:.2s}
+    .reveal-delay-3{transition-delay:.3s}
+    .reveal-delay-4{transition-delay:.4s}
+
+    /* ── Mobile ── */
+    @media(max-width:900px){
+      .features-grid{grid-template-columns:repeat(2,1fr)}
+      .explorer{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:640px){
+      .hero{padding:100px 0 60px}
+      .hero h1{font-size:2rem}
+      .features-grid{grid-template-columns:1fr}
+      .console-body{flex-direction:column}
+      .console-output{border-left:none;border-top:1px solid var(--border)}
+      .stats-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+      .footer-grid{grid-template-columns:1fr}
+      nav{display:none}
+    }
+  </style>
+
+  <!-- ──────────────── JSON-LD Structured Data ──────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebAPI",
+    "name": "VortexScans API",
+    "description": "Free RESTful API for manga, manhwa, and manhua data. 10 endpoints, 355+ titles, chapter images.",
+    "url": "https://vortexscans.vercel.app",
+    "image": "https://vortexscans.vercel.app/og-image.png",
+    "documentation": "https://vortexscans.vercel.app/docs",
+    "provider": {
+      "@type": "Organization",
+      "name": "VortexScans API",
+      "url": "https://github.com/Shineii86/VortexScansAPI"
+    },
+    "category": "Manga/Manhwa REST API",
+    "endpoint": "https://vortexscans.vercel.app/api",
+    "programmingModel": "REST"
+  }
+  </script>
+</head>
+<body>
+
+  <div class="ambient">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <canvas id="particles"></canvas>
+
+  <div class="wrap">
+
+    <!-- Header -->
+    <header id="header">
+      <div class="header-inner">
+        <a href="/" class="logo">
+          <img src="/icon.svg" alt="VortexScans" width="28" height="28" style="border-radius:6px" />
+          <span class="logo-text"><span>Vortex</span>Scans API</span>
+        </a>
+        <nav>
+          <a href="#features">Features</a>
+          <a href="#endpoints">Endpoints</a>
+          <a href="#playground">Playground</a>
+          <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="/docs" target="_blank" class="nav-cta">Swagger UI</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero container">
+      <div class="hero-badge"><span class="dot"></span> Free &middot; No API key &middot; Open source</div>
+      <h1>The <span class="grad">Manga &amp; Manhwa</span> API<br/>for Your Next Project</h1>
+      <p class="hero-sub">Search, discover, and read manga with chapter images. Powered by Vortex Scans. 10 endpoints, 355+ titles, 54 genres, zero config.</p>
+      <div class="hero-actions">
+        <a href="#playground" class="btn btn-primary">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Try It Live
+        </a>
+        <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" class="btn btn-ghost">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          Star on GitHub
+        </a>
+      </div>
+
+      <!-- Live Console -->
+      <div class="console" id="heroConsole">
+        <div class="console-bar">
+          <span class="console-dot"></span><span class="console-dot"></span><span class="console-dot"></span>
+          <span class="console-title">vortexscans.vercel.app — API Console</span>
+        </div>
+        <div class="console-body">
+          <textarea class="console-input" id="consoleInput" rows="6" spellcheck="false">// Search for manga
+fetch("https://vortexscans.vercel.app/api/search?q=naruto")
+  .then(r => r.json())
+  .then(data => {
+    console.log(data.data);
+  });</textarea>
+          <div class="console-output" id="consoleOutput"><span style="color:var(--text3)">// Click "Run" to see the response</span></div>
+        </div>
+        <div class="console-actions">
+          <button class="console-btn active" onclick="setEndpoint('search', event)">Search</button>
+          <button class="console-btn" onclick="setEndpoint('manga', event)">Manga</button>
+          <button class="console-btn" onclick="setEndpoint('home', event)">Home</button>
+          <button class="console-btn" onclick="setEndpoint('genres', event)">Genres</button>
+          <button class="console-btn" onclick="setEndpoint('status', event)">Status</button>
+          <button class="console-send" onclick="runConsole()">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:inline"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="reveal"><div class="stat-value grad" data-count="10">0</div><div class="stat-label">API Endpoints</div></div>
+          <div class="reveal reveal-delay-1"><div class="stat-value grad" data-count="355">0</div><div class="stat-label">Manga Titles</div></div>
+          <div class="reveal reveal-delay-2"><div class="stat-value grad" data-count="54">0</div><div class="stat-label">Genres</div></div>
+          <div class="reveal reveal-delay-3"><div class="stat-value grad">JSON</div><div class="stat-label">Response Format</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee">
+      <div class="marquee-track">
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 5-min cache TTL</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Zero config</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No auth needed</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Vercel deployed</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg> Chapter images</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> REST JSON</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg> CORS enabled</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Open source</div>
+        <!-- duplicate for seamless loop -->
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 5-min cache TTL</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Zero config</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> No auth needed</div>
+        <div class="marquee-item"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg> Vercel deployed</div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="reveal">
+          <div class="section-label">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Features
+          </div>
+          <h2 class="section-title">Built for developers</h2>
+          <p class="section-desc">Everything you need to build a manga reader website, mobile app, or Discord bot. No API keys, no rate limits, no hassle.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card reveal">
+            <div class="feature-icon fi-accent">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <div class="feature-title">Full-text Search</div>
+            <div class="feature-desc">Search by title with paginated results. Find manga, manhwa, and manhua by name instantly.</div>
+          </div>
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon fi-accent2">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"/></svg>
+            </div>
+            <div class="feature-title">Chapter Images</div>
+            <div class="feature-desc">Get direct image URLs for each chapter page from Vortex Scans CDN. No scraping needed.</div>
+          </div>
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon fi-green">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+            </div>
+            <div class="feature-title">Rich Metadata</div>
+            <div class="feature-desc">Genres, ratings, types, statuses, chapter lists, and more. All the data you need in one API.</div>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon fi-cyan">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            </div>
+            <div class="feature-title">Advanced Filters</div>
+            <div class="feature-desc">Filter by type (manhwa/manga/manhua), status (ongoing/hiatus/completed), and genre.</div>
+          </div>
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon fi-amber">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="feature-title">Home Data</div>
+            <div class="feature-desc">Latest, hot, and top rated manga collections in a single endpoint. Perfect for landing pages.</div>
+          </div>
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon fi-pink">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="feature-title">Fast & Cached</div>
+            <div class="feature-desc">In-memory cache with 5-minute TTL and max 100 entries. Snappy responses with reduced upstream requests.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Endpoints -->
+    <section class="section" id="endpoints" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+      <div class="container">
+        <div class="reveal">
+          <div class="section-label">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            API Reference
+          </div>
+          <h2 class="section-title">Endpoints</h2>
+          <p class="section-desc">All endpoints return JSON. Base URL: <code style="color:var(--accent);background:rgba(56,189,248,.1);padding:2px 8px;border-radius:4px">https://vortexscans.vercel.app/api</code></p>
+        </div>
+
+        <div class="explorer reveal" id="explorer">
+          <div class="explorer-nav" id="explorerNav"></div>
+          <div class="explorer-panel" id="explorerPanel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Playground -->
+    <section class="section" id="playground">
+      <div class="container">
+        <div class="reveal">
+          <div class="section-label">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Interactive
+          </div>
+          <h2 class="section-title">Playground</h2>
+          <p class="section-desc">Test endpoints directly in your browser. No signup required.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">
+          <!-- Search -->
+          <div class="playground-card reveal">
+            <div class="playground-header">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <h3>Search Manga</h3>
+            </div>
+            <div class="playground-body">
+              <div class="playground-inputs">
+                <input id="pgSearch" type="text" placeholder="e.g. solo leveling, naruto" aria-label="Search manga" />
+                <button class="btn btn-primary" onclick="pgRun('search')" style="padding:10px 20px">Search</button>
+              </div>
+              <div class="playground-output" id="pgSearchOut"></div>
+            </div>
+          </div>
+          <!-- Manga Detail -->
+          <div class="playground-card reveal reveal-delay-1">
+            <div class="playground-header">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              <h3>Manga Detail</h3>
+            </div>
+            <div class="playground-body">
+              <div class="playground-inputs">
+                <input id="pgDetail" type="text" placeholder="Manga slug (e.g. solo-leveling)" />
+                <button class="btn btn-primary" onclick="pgRun('detail')" style="padding:10px 20px">Get Detail</button>
+              </div>
+              <div class="playground-output" id="pgDetailOut"></div>
+            </div>
+          </div>
+          <!-- Filter -->
+          <div class="playground-card reveal reveal-delay-2">
+            <div class="playground-header">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              <h3>Filter Manga</h3>
+            </div>
+            <div class="playground-body">
+              <div class="playground-inputs">
+                <select id="pgFilterType">
+                  <option value="">All Types</option>
+                  <option value="manhwa">Manhwa</option>
+                  <option value="manga">Manga</option>
+                  <option value="manhua">Manhua</option>
+                </select>
+                <button class="btn btn-primary" onclick="pgRun('filter')" style="padding:10px 20px">Filter</button>
+              </div>
+              <div class="playground-output" id="pgFilterOut"></div>
+            </div>
+          </div>
+          <!-- Genres -->
+          <div class="playground-card reveal reveal-delay-3">
+            <div class="playground-header">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <h3>All Genres</h3>
+            </div>
+            <div class="playground-body">
+              <div class="playground-inputs">
+                <button class="btn btn-primary" onclick="pgRun('genres')" style="padding:10px 20px">Get Genres</button>
+              </div>
+              <div class="playground-output" id="pgGenresOut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2 class="cta-title">Start building with VortexScans API</h2>
+          <p class="cta-desc">Free, open source, no API key required. Deploy your own instance or use ours.</p>
+          <div class="cta-actions">
+            <a href="/docs" target="_blank" class="btn btn-primary">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Swagger UI Docs
+            </a>
+            <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" class="btn btn-ghost">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              Source Code
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="logo">
+              <img src="/icon.svg" alt="VortexScans" width="24" height="24" style="border-radius:6px" />
+              <span class="logo-text"><span>Vortex</span>Scans API</span>
+            </a>
+            <p>Free RESTful API for manga, manhwa, and manhua data. Powered by Vortex Scans. Built with Node.js and deployed on Vercel.</p>
+          </div>
+          <div class="footer-col">
+            <h4>API</h4>
+            <a href="/api/search?q=naruto">Search</a>
+            <a href="/api/manga">Browse Manga</a>
+            <a href="/api/home">Home Data</a>
+            <a href="/api/genres">Genres</a>
+            <a href="/api/status">Status</a>
+          </div>
+          <div class="footer-col">
+            <h4>Resources</h4>
+            <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/Shineii86/VortexScansAPI#readme" target="_blank" rel="noopener noreferrer">Documentation</a>
+            <a href="https://github.com/Shineii86/VortexScansAPI/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a>
+            <a href="/docs" target="_blank" rel="noopener noreferrer">Swagger UI</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/tos">Terms of Service</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>&copy; 2026 VortexScans API. Educational use only.</span>
+          <div class="footer-social">
+            <a href="https://github.com/Shineii86/VortexScansAPI" target="_blank" aria-label="GitHub">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    /* ── Particles ── */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.5 + .5;
+        this.speedX = (Math.random() - .5) * .3;
+        this.speedY = (Math.random() - .5) * .3;
+        this.opacity = Math.random() * .3 + .1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56,189,248,${this.opacity})`;
+        ctx.fill();
+      }
+    }
+    for (let i = 0; i < 60; i++) particles.push(new Particle());
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* ── Header Scroll ── */
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    /* ── Scroll Reveal ── */
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+    }, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => revealObserver.observe(el));
+
+    /* ── Animated Counters ── */
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const obs = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) {
+          let current = 0;
+          const step = Math.ceil(target / 30);
+          const timer = setInterval(() => {
+            current += step;
+            if (current >= target) { current = target; clearInterval(timer); }
+            el.textContent = current >= 1000 ? current.toLocaleString() + '+' : current;
+          }, 30);
+          obs.unobserve(el);
+        }
+      }, { threshold: .5 });
+      obs.observe(el);
+    });
+
+    /* ── Console ── */
+    const BASE = 'https://vortexscans.vercel.app/api';
+    const endpoints = {
+      search: { url: '/search?q=naruto', label: 'Search' },
+      manga: { url: '/manga?limit=5', label: 'Manga List' },
+      home: { url: '/home', label: 'Home' },
+      genres: { url: '/genres', label: 'Genres' },
+      status: { url: '/status', label: 'Status' }
+    };
+    function setEndpoint(key, event) {
+      const ep = endpoints[key];
+      document.getElementById('consoleInput').value = `// ${ep.label}\nfetch("${BASE}${ep.url}")\n  .then(r => r.json())\n  .then(data => {\n    console.log(data);\n  });`;
+      document.querySelectorAll('.console-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+    async function runConsole() {
+      const out = document.getElementById('consoleOutput');
+      out.innerHTML = '<span style="color:var(--amber)">Loading...</span>';
+      const input = document.getElementById('consoleInput').value;
+      const urlMatch = input.match(/fetch\("([^"]+)"\)/);
+      if (!urlMatch) { out.innerHTML = '<span style="color:var(--red)">No fetch URL found</span>'; return; }
+      try {
+        const res = await fetch(urlMatch[1]);
+        const data = await res.json();
+        out.innerHTML = syntaxHighlight(JSON.stringify(data, null, 2));
+        out.scrollTop = out.scrollHeight;
+      } catch (e) {
+        out.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
+      }
+    }
+    function syntaxHighlight(json) {
+      return json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"([^"]+)"(?=\s*:)/g, '<span style="color:var(--pink)">"$1"</span>')
+        .replace(/: "([^"]*)"/g, ': <span style="color:var(--green)">"$1"</span>')
+        .replace(/: (\d+)/g, ': <span style="color:var(--amber)">$1</span>')
+        .replace(/: (true|false|null)/g, ': <span style="color:var(--cyan)">$1</span>');
+    }
+
+    /* ── Explorer ── */
+    const explorerData = [
+      { id: 'home', title: 'Home', desc: 'Latest, hot, and top rated manga collections with genre metadata.', path: '/api/home', params: [], code: { curl: 'curl "https://vortexscans.vercel.app/api/home"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/home");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/home")\nprint(r.json())' } },
+      { id: 'manga', title: 'Manga List', desc: 'Paginated manga list with optional filtering by type, status, genre.', path: '/api/manga?page={n}&limit={n}&type={type}&status={status}', params: [{ name: 'page', type: 'number', desc: 'Page (default 1)' }, { name: 'limit', type: 'number', desc: 'Results per page (default 48)' }, { name: 'type', type: 'string', desc: 'manhwa/manga/manhua' }, { name: 'status', type: 'string', desc: 'ongoing/hiatus/completed' }, { name: 'search', type: 'string', desc: 'Search keyword' }], code: { curl: 'curl "https://vortexscans.vercel.app/api/manga?limit=10"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/manga?limit=10");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/manga", params={"limit": 10})\nprint(r.json())' } },
+      { id: 'detail', title: 'Manga Detail', desc: 'Detailed manga info with paginated chapters by slug.', path: '/api/manga?slug={slug}', params: [{ name: 'slug', type: 'string', desc: 'Manga URL slug' }], code: { curl: 'curl "https://vortexscans.vercel.app/api/manga?slug=solo-leveling"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/manga?slug=solo-leveling");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/manga", params={"slug": "solo-leveling"})\nprint(r.json())' } },
+      { id: 'chapters', title: 'Chapters', desc: 'All chapters for a manga with pagination.', path: '/api/manga?slug={slug}&action=chapters', params: [{ name: 'slug', type: 'string', desc: 'Manga URL slug' }], code: { curl: 'curl "https://vortexscans.vercel.app/api/manga?slug=solo-leveling&action=chapters"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/manga?slug=solo-leveling&action=chapters");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/manga", params={"slug": "solo-leveling", "action": "chapters"})\nprint(r.json())' } },
+      { id: 'chapter', title: 'Chapter Images', desc: 'Page images and navigation for a chapter.', path: '/api/chapter?slug={slug}&chapter={chapter}', params: [{ name: 'slug', type: 'string', desc: 'Manga slug' }, { name: 'chapter', type: 'string', desc: 'Chapter slug (e.g. chapter-1)' }], code: { curl: 'curl "https://vortexscans.vercel.app/api/chapter?slug=solo-leveling&chapter=chapter-1"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/chapter?slug=solo-leveling&chapter=chapter-1");\nconst data = await res.json();\nconsole.log(data.chapter.images);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/chapter", params={"slug": "solo-leveling", "chapter": "chapter-1"})\nprint(r.json())' } },
+      { id: 'search', title: 'Search', desc: 'Full-text manga search with pagination.', path: '/api/search?q={query}&page={n}&limit={n}', params: [{ name: 'q', type: 'string', desc: 'Search query' }, { name: 'page', type: 'number', desc: 'Page (default 1)' }, { name: 'limit', type: 'number', desc: 'Results per page (default 20)' }], code: { curl: 'curl "https://vortexscans.vercel.app/api/search?q=naruto"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/search?q=naruto");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/search", params={"q": "naruto"})\nprint(r.json())' } },
+      { id: 'filter', title: 'Filter', desc: 'Advanced filter by type, status, genre with sort options.', path: '/api/filter?type={type}&status={status}&genre={genre}', params: [{ name: 'type', type: 'string', desc: 'manhwa/manga/manhua' }, { name: 'status', type: 'string', desc: 'ongoing/hiatus/completed' }, { name: 'genre', type: 'string', desc: 'Genre ID' }, { name: 'sort', type: 'string', desc: 'Sort field' }], code: { curl: 'curl "https://vortexscans.vercel.app/api/filter?type=manhwa&status=ongoing"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/filter?type=manhwa&status=ongoing");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/filter", params={"type": "manhwa", "status": "ongoing"})\nprint(r.json())' } },
+      { id: 'genres', title: 'Genres', desc: 'All available genres aggregated from manga data.', path: '/api/genres', params: [], code: { curl: 'curl "https://vortexscans.vercel.app/api/genres"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/genres");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/genres")\nprint(r.json())' } },
+      { id: 'status', title: 'Status', desc: 'Available statuses, types, and sort options.', path: '/api/status', params: [], code: { curl: 'curl "https://vortexscans.vercel.app/api/status"', js: 'const res = await fetch("https://vortexscans.vercel.app/api/status");\nconst data = await res.json();\nconsole.log(data.data);', python: 'import requests\nr = requests.get("https://vortexscans.vercel.app/api/status")\nprint(r.json())' } },
+    ];
+
+    function renderExplorerNav() {
+      const nav = document.getElementById('explorerNav');
+      nav.innerHTML = explorerData.map((ep, i) => `
+        <button class="explorer-nav-btn ${i === 0 ? 'active' : ''}" onclick="selectEndpoint('${ep.id}', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          ${ep.title}
+        </button>
+      `).join('');
+    }
+
+    function selectEndpoint(id, btn) {
+      const ep = explorerData.find(e => e.id === id);
+      if (!ep) return;
+      document.querySelectorAll('.explorer-nav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const panel = document.getElementById('explorerPanel');
+      const paramsHtml = ep.params.length ? `
+        <div class="explorer-params">
+          <div class="explorer-params-title">Parameters</div>
+          ${ep.params.map(p => `
+            <div class="param-row">
+              <div class="param-name">${p.name}</div>
+              <div class="param-type">${p.type}</div>
+              <div class="param-desc">${p.desc}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : '<div style="color:var(--text3);font-size:.82rem;margin-bottom:16px">No parameters required</div>';
+
+      panel.innerHTML = `
+        <div class="explorer-panel-title">${ep.title}</div>
+        <div class="explorer-panel-desc">${ep.desc}</div>
+        <div class="explorer-method method-get">GET</div>
+        <div class="explorer-path">${ep.path}</div>
+        ${paramsHtml}
+        <div class="code-tabs">
+          <button class="code-tab active" onclick="switchTab(this, '${ep.id}-curl')">cURL</button>
+          <button class="code-tab" onclick="switchTab(this, '${ep.id}-js')">JavaScript</button>
+          <button class="code-tab" onclick="switchTab(this, '${ep.id}-py')">Python</button>
+        </div>
+        <div class="explorer-code code-block active" id="${ep.id}-curl"><span class="cmt"># ${ep.title}</span>\n${ep.code.curl}</div>
+        <div class="explorer-code code-block" id="${ep.id}-js"><span class="cmt">// ${ep.title}</span>\n${ep.code.js}</div>
+        <div class="explorer-code code-block" id="${ep.id}-py"><span class="cmt"># ${ep.title}</span>\n${ep.code.python}</div>
+      `;
+    }
+
+    function switchTab(btn, id) {
+      const panel = btn.closest('.explorer-panel');
+      panel.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+      panel.querySelectorAll('.code-block').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.add('active');
+    }
+
+    renderExplorerNav();
+    selectEndpoint('home');
+
+    /* ── Playground ── */
+    async function pgRun(type) {
+      const outEl = document.getElementById('pg' + type.charAt(0).toUpperCase() + type.slice(1) + 'Out');
+      if (!outEl) return;
+      outEl.classList.add('visible');
+      outEl.innerHTML = '<span style="color:var(--amber)">Loading...</span>';
+      try {
+        let url;
+        if (type === 'search') url = `/api/search?q=${document.getElementById('pgSearch').value}`;
+        else if (type === 'detail') url = `/api/manga?slug=${document.getElementById('pgDetail').value}`;
+        else if (type === 'filter') { const t = document.getElementById('pgFilterType').value; url = `/api/filter${t ? '?type=' + t : ''}`; }
+        else if (type === 'genres') url = '/api/genres';
+        const res = await fetch(url);
+        const data = await res.json();
+        outEl.innerHTML = syntaxHighlight(JSON.stringify(data, null, 2));
+      } catch (e) {
+        outEl.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

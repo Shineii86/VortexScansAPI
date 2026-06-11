@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.0] - 2026-06-11
+
+### Added
+- `docs/index.md` - Overview, quick start, features
+- `docs/endpoints.md` - Full API reference (10 endpoints)
+- `docs/examples.md` - cURL, JavaScript, Python examples
+- `docs/architecture.md` - Project structure and design decisions
+
 ## [4.0.0] - 2026-06-11
 
 ### Added

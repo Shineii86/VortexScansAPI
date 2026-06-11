@@ -4,6 +4,7 @@ const DEFAULT_TTL = 5 * 60 * 1000;
 function getCacheKey(prefix, params) {
   const sorted = Object.keys(params)
     .sort()
+    .filter((k) => params[k] !== undefined && params[k] !== null && params[k] !== '')
     .map((k) => `${k}=${params[k]}`)
     .join('&');
   return `${prefix}:${sorted}`;
@@ -20,10 +21,7 @@ function get(key) {
 }
 
 function set(key, data, ttl = DEFAULT_TTL) {
-  cache.set(key, {
-    data,
-    expiresAt: Date.now() + ttl,
-  });
+  cache.set(key, { data, expiresAt: Date.now() + ttl });
 }
 
 function has(key) {
@@ -36,10 +34,6 @@ function has(key) {
   return true;
 }
 
-function clear() {
-  cache.clear();
-}
-
 function size() {
   return cache.size;
 }
@@ -47,12 +41,10 @@ function size() {
 function cleanup() {
   const now = Date.now();
   for (const [key, item] of cache.entries()) {
-    if (now > item.expiresAt) {
-      cache.delete(key);
-    }
+    if (now > item.expiresAt) cache.delete(key);
   }
 }
 
 setInterval(cleanup, 60 * 1000);
 
-module.exports = { get, set, has, clear, size, getCacheKey };
+module.exports = { get, set, has, size, getCacheKey };

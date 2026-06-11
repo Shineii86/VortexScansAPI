@@ -1,10 +1,11 @@
 {
   "name": "vortexscans-api",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Unofficial REST API for Vortex Scans (vortexscans.org)",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel deploy --prod"
+    "deploy": "vercel deploy --prod",
+    "test": "node test.js"
   },
   "engines": {
     "node": ">=18.0.0"

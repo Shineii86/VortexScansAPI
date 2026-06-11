@@ -8,8 +8,11 @@ function transformPost(post) {
     status: post.seriesStatus?.toLowerCase(),
     hot: post.hot,
     pinned: post.isPinned,
+    sale: post.saleActive
+      ? { active: true, percentage: post.salePercentage, endDate: post.saleEndDate }
+      : { active: false },
     rating: post.averageRating,
-    genres: (post.genres || []).map(transformGenre),
+    genres: (post.genres || []).map((g) => ({ id: g.id, name: g.name })),
     chapters: (post.chapters || []).map(transformChapter),
   };
 }
@@ -22,11 +25,8 @@ function transformChapter(ch) {
     slug: ch.slug,
     createdAt: ch.createdAt,
     locked: ch.isLocked,
+    accessible: ch.isAccessible,
   };
-}
-
-function transformGenre(g) {
-  return { id: g.id, name: g.name };
 }
 
 function transformMangaList(data, params) {
@@ -65,7 +65,6 @@ function transformMangaDetail(post, page, limit) {
 module.exports = {
   transformPost,
   transformChapter,
-  transformGenre,
   transformMangaList,
   transformMangaDetail,
 };

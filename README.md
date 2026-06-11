@@ -1,6 +1,7 @@
 # VortexScans API
 
-Unofficial REST API for [Vortex Scans](https://vortexscans.org).
+Unofficial REST API for [Vortex Scans](https://vortexscans.org).  
+**355+ manga** with chapter images, search, filters, and more.
 
 ## Base URL
 
@@ -8,89 +9,43 @@ Unofficial REST API for [Vortex Scans](https://vortexscans.org).
 https://vortex-scans-api.vercel.app/api
 ```
 
-## Architecture
-
-```
-api/                    # Vercel Serverless Functions
-├── manga.js            # Manga list & detail routes
-├── genres.js           # Genres route
-├── status.js           # Status route
-└── index.js            # API info route
-
-src/
-├── controllers/        # Route handlers
-│   ├── manga.controller.js
-│   ├── genres.controller.js
-│   ├── status.controller.js
-│   └── index.controller.js
-├── extractors/         # Data transformation
-│   └── manga.extractor.js
-└── helpers/            # Utilities
-    ├── cache.helper.js
-    └── constants.helper.js
-```
-
-## Caching
-
-| Endpoint | TTL |
-|----------|-----|
-| `/api/manga` | 5 minutes |
-| `/api/manga/{slug}` | 5 minutes |
-| `/api/genres` | 1 hour |
-| `/api/status` | 24 hours |
-
 ## Endpoints
 
-### List Manga
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/home` | Home page data (latest, hot, top rated) |
+| `GET /api/manga` | List all manga |
+| `GET /api/manga/{slug}` | Manga detail |
+| `GET /api/manga/{slug}/chapters` | All chapters |
+| `GET /api/chapter?slug=&chapter=` | Chapter images |
+| `GET /api/search?q=keyword` | Search manga |
+| `GET /api/filter?type=&status=&genre=` | Filter manga |
+| `GET /api/genres` | All genres |
+| `GET /api/status` | Statuses & types |
 
-```
-GET /api/manga
-```
-
-| Param     | Type    | Default | Description                    |
-|-----------|---------|---------|--------------------------------|
-| page      | number  | 1       | Page number                    |
-| limit     | number  | 48      | Items per page                 |
-| search    | string  | -       | Search by title                |
-| type      | string  | -       | manhwa / manga / manhua        |
-| status    | string  | -       | ongoing / hiatus / completed   |
-| genre     | string  | -       | Genre name                     |
-| order     | string  | -       | Sort field                     |
-| direction | string  | -       | asc / desc                     |
-| hot       | boolean | -       | Hot series only                |
+## Examples
 
 ```bash
-curl "https://vortex-scans-api.vercel.app/api/manga?search=reality&type=manhwa"
-```
+# List manga
+curl "https://vortex-scans-api.vercel.app/api/manga?page=1&limit=10"
 
-### Manga Detail
+# Search
+curl "https://vortex-scans-api.vercel.app/api/search?q=reality"
 
-```
-GET /api/manga/{slug}
-```
-
-| Param | Type   | Default | Description       |
-|-------|--------|---------|-------------------|
-| page  | number | 1       | Chapters page     |
-| limit | number | 50      | Chapters per page |
-
-```bash
+# Manga detail
 curl "https://vortex-scans-api.vercel.app/api/manga/reality-quest-2"
+
+# Chapter images
+curl "https://vortex-scans-api.vercel.app/api/chapter?slug=reality-quest-2&chapter=chapter-209"
+
+# Filter
+curl "https://vortex-scans-api.vercel.app/api/filter?type=manhwa&status=ongoing"
+
+# Home
+curl "https://vortex-scans-api.vercel.app/api/home"
 ```
 
-### Genres
-
-```
-GET /api/genres
-```
-
-### Status & Types
-
-```
-GET /api/status
-```
-
-## Response
+## Response Format
 
 ```json
 {
@@ -100,8 +55,36 @@ GET /api/status
 }
 ```
 
+## Chapter Images Response
+
+```json
+{
+  "success": true,
+  "manga": { "slug": "reality-quest-2" },
+  "chapter": {
+    "slug": "chapter-209",
+    "title": "Reality Quest Chapter 209",
+    "images": [
+      { "page": 1, "url": "https://storage.vortexscans.org/..." }
+    ],
+    "totalPages": 38,
+    "navigation": {
+      "prev": { "slug": "chapter-208" },
+      "next": null
+    }
+  }
+}
+```
+
+## Cache
+
+| Endpoint | TTL |
+|----------|-----|
+| Manga list/detail | 5 min |
+| Chapter images | 30 min |
+| Genres | 1 hour |
+| Status | 24 hours |
+
 ## License
 
-MIT
-
-Made by **Shineii86**
+MIT — Made by **Shineii86**

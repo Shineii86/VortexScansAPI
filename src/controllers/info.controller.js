@@ -2,24 +2,29 @@ const cache = require('../helpers/cache.helper');
 
 async function getApiInfo() {
   const cacheKey = 'api:info';
-
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
   const result = {
     success: true,
     name: 'VortexScans API',
-    version: '2.0.0',
+    version: '3.0.0',
     description: 'Unofficial REST API for Vortex Scans (vortexscans.org)',
     author: 'Shineii86',
     endpoints: {
+      home: {
+        url: '/api/home',
+        method: 'GET',
+        description: 'Home page data (latest, hot, top rated)',
+      },
       manga: {
         list: {
           url: '/api/manga',
           method: 'GET',
+          description: 'List all manga with pagination',
           params: {
             page: { type: 'number', default: 1 },
-            limit: { type: 'number', default: 48 },
+            limit: { type: 'number', default: 48, max: 100 },
             search: { type: 'string' },
             type: { type: 'string', options: ['manhwa', 'manga', 'manhua'] },
             status: { type: 'string', options: ['ongoing', 'hiatus', 'completed'] },
@@ -28,19 +33,50 @@ async function getApiInfo() {
             direction: { type: 'string', options: ['asc', 'desc'] },
             hot: { type: 'boolean' },
           },
-          example: '/api/manga?page=1&limit=20&type=manhwa',
         },
         detail: {
           url: '/api/manga/{slug}',
           method: 'GET',
-          example: '/api/manga/reality-quest-2',
+          description: 'Manga detail with chapters',
+        },
+        chapters: {
+          url: '/api/manga/{slug}/chapters',
+          method: 'GET',
+          description: 'All chapters for a manga',
         },
       },
-      genres: { url: '/api/genres', method: 'GET' },
-      status: { url: '/api/status', method: 'GET' },
+      chapter: {
+        images: {
+          url: '/api/chapter/{slug}/{chapter}',
+          method: 'GET',
+          description: 'Chapter images + navigation',
+        },
+      },
+      search: {
+        url: '/api/search?q=keyword',
+        method: 'GET',
+        description: 'Search manga by keyword',
+      },
+      filter: {
+        url: '/api/filter?type=manhwa&status=ongoing',
+        method: 'GET',
+        description: 'Filter manga by type/status/genre',
+      },
+      genres: {
+        url: '/api/genres',
+        method: 'GET',
+        description: 'All available genres',
+      },
+      status: {
+        url: '/api/status',
+        method: 'GET',
+        description: 'Available statuses, types, sort options',
+      },
     },
     cache: {
       manga: '5 minutes',
+      chapters: '5 minutes',
+      chapterImages: '30 minutes',
       genres: '1 hour',
       status: '24 hours',
     },

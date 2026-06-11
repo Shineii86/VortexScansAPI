@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0] - 2026-06-11
+
+### Changed
+- Refactored from Next.js to pure Vercel Serverless Functions
+- Removed Next.js dependency and framework overhead
+- Simplified project structure to `api/` folder
+- Faster cold starts and smaller bundle size
+
 ## [1.0.0] - 2026-06-11
 
 ### Added
@@ -15,7 +23,5 @@
 - Sort by various fields
 - CORS support for cross-origin requests
 - Response caching (5 minutes for manga, 1 hour for genres)
-- Next.js App Router architecture
-- Vercel deployment ready
-- Documentation homepage at `/`
+- Documentation endpoint at `/api`
 - Comprehensive README with API documentation

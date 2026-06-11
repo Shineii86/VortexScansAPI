@@ -1,31 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/app/**/*.js",
-      "use": "@vercel/next"
-    }
-  ],
   "routes": [
-    {
-      "src": "/api/manga",
-      "dest": "/src/app/api/manga/route.js"
-    },
-    {
-      "src": "/api/manga/search",
-      "dest": "/src/app/api/manga/route.js"
-    },
-    {
-      "src": "/api/manga/:slug",
-      "dest": "/src/app/api/manga/[slug]/route.js"
-    },
-    {
-      "src": "/api/genres",
-      "dest": "/src/app/api/genres/route.js"
-    },
-    {
-      "src": "/api/status",
-      "dest": "/src/app/api/status/route.js"
-    }
+    { "src": "/api/manga/([^/]*)", "dest": "/api/manga.js?slug=$1" },
+    { "src": "/api/manga", "dest": "/api/manga.js" },
+    { "src": "/api/genres", "dest": "/api/genres.js" },
+    { "src": "/api/status", "dest": "/api/status.js" },
+    { "src": "/api", "dest": "/api/index.js" },
+    { "src": "/(.*)", "dest": "/api/index.js" }
   ]
 }

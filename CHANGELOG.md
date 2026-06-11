@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.1.0] - 2026-06-11
+
+### Changed
+- Refactored all source files to match MiruroAPI code style
+- Added box-style file headers with repository link and author info
+- Added section headers (═══) for code organization
+- Added feature markers (// ---- FEATURE:) for each function
+- Added JSDoc function-level documentation with @param, @returns, @example
+- Added inline notes (// NOTE:) for implementation details
+- Added file footer markers (// ═══ END: filename)
+
 ## [3.0.0] - 2026-06-11
 
 ### Added

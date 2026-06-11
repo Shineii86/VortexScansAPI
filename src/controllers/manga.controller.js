@@ -1,9 +1,48 @@
+/*
+ * ======= • ======= • ======= • ======= • =======• =======
+ * VortexScansAPI — manga.controller.js
+ * Repository: https://github.com/Shineii86/VortexScansAPI
+ *
+ * @description
+ *   Business logic for manga endpoints. Handles listing, detail view,
+ *   and chapter retrieval. Integrates with cache, fetch, and extractor
+ *   layers for complete request processing.
+ *
+ * @exports
+ *   getMangaList, getMangaBySlug, getMangaChapters
+ *
+ * @author  Shinei Nouzen
+ * @license MIT
+ * ======= • ======= • ======= • ======= • =======• =======
+ */
+
 const cache = require('../helpers/cache.helper');
 const { CACHE_TTL } = require('../helpers/constants.helper');
 const { fetchVortex } = require('../helpers/fetch.helper');
 const { transformMangaList, transformMangaDetail } = require('../extractors/manga.extractor');
 
-async function getMangaList(query) {
+// ══════════════════════════════════════════════════════════════
+// MANGA LIST
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Paginated manga list with filtering ----
+/**
+ * Retrieves a paginated list of manga with optional filtering.
+ * Supports search, type, status, genre, sort order, and direction.
+ *
+ * @param {object} query - Request query parameters
+ * @param {number} [query.page=1] - Page number
+ * @param {number} [query.limit=48] - Results per page (max 100)
+ * @param {string} [query.search] - Search keyword
+ * @param {string} [query.type] - Series type (manhwa/manga/manhua)
+ * @param {string} [query.status] - Series status (ongoing/hiatus/completed)
+ * @param {string} [query.genre] - Genre filter
+ * @param {string} [query.order] - Sort field
+ * @param {string} [query.direction] - Sort direction (asc/desc)
+ * @param {string} [query.hot] - Hot manga filter
+ * @returns {Promise<object>} Paginated manga list
+ */
+const getMangaList = async (query) => {
   const params = {
     page: parseInt(query.page) || 1,
     perPage: Math.min(parseInt(query.limit) || 48, 100),
@@ -26,9 +65,24 @@ async function getMangaList(query) {
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_LIST);
   return result;
-}
+};
 
-async function getMangaBySlug(slug, query) {
+// ══════════════════════════════════════════════════════════════
+// MANGA DETAIL
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Single manga detail by slug ----
+/**
+ * Retrieves detailed information for a single manga by slug.
+ * Searches the API and finds the matching post. Returns 404 if not found.
+ *
+ * @param {string} slug - Manga URL slug
+ * @param {object} query - Request query parameters
+ * @param {number} [query.page=1] - Chapter page number
+ * @param {number} [query.limit=50] - Chapters per page
+ * @returns {Promise<object>} Manga detail with paginated chapters
+ */
+const getMangaBySlug = async (slug, query) => {
   const cacheKey = cache.getCacheKey('manga-detail', { slug, ...query });
   const cached = cache.get(cacheKey);
   if (cached) return cached;
@@ -46,9 +100,24 @@ async function getMangaBySlug(slug, query) {
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_DETAIL);
   return result;
-}
+};
 
-async function getMangaChapters(slug, query) {
+// ══════════════════════════════════════════════════════════════
+// MANGA CHAPTERS
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Paginated chapter list for a manga ----
+/**
+ * Retrieves all chapters for a manga with pagination.
+ * Returns manga metadata (title, image) along with chapter list.
+ *
+ * @param {string} slug - Manga URL slug
+ * @param {object} query - Request query parameters
+ * @param {number} [query.page=1] - Chapter page number
+ * @param {number} [query.limit=50] - Chapters per page
+ * @returns {Promise<object>} Chapter list with manga info
+ */
+const getMangaChapters = async (slug, query) => {
   const cacheKey = cache.getCacheKey('manga-chapters', { slug, ...query });
   const cached = cache.get(cacheKey);
   if (cached) return cached;
@@ -94,6 +163,8 @@ async function getMangaChapters(slug, query) {
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_DETAIL);
   return result;
-}
+};
 
 module.exports = { getMangaList, getMangaBySlug, getMangaChapters };
+
+// ══════════════════════════════════════════════════════════════ END: manga.controller.js

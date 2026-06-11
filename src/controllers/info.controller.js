@@ -1,6 +1,44 @@
+/*
+ * ======= • ======= • ======= • ======= • =======• =======
+ * VortexScansAPI — info.controller.js
+ * Repository: https://github.com/Shineii86/VortexScansAPI
+ *
+ * @description
+ *   Business logic for API info endpoint. Returns comprehensive
+ *   API documentation including all available endpoints, parameters,
+ *   cache settings, and repository links.
+ *
+ * @exports
+ *   getApiInfo
+ *
+ * @author  Shinei Nouzen
+ * @license MIT
+ * ======= • ======= • ======= • ======= • =======• =======
+ */
+
 const cache = require('../helpers/cache.helper');
 
-async function getApiInfo() {
+// ══════════════════════════════════════════════════════════════
+// API INFORMATION
+// ══════════════════════════════════════════════════════════════
+
+// ---- FEATURE: Comprehensive API documentation response ----
+/**
+ * Returns full API documentation including:
+ * - All available endpoints with URLs and descriptions
+ * - Query parameters with types and default values
+ * - Cache TTL settings for each endpoint
+ * - Repository and source links
+ *
+ * Cached for 1 hour since this is static documentation.
+ *
+ * @returns {Promise<object>} API documentation object
+ *
+ * @example
+ *   const info = await getApiInfo();
+ *   // { success: true, name: "VortexScans API", version: "3.0.0", endpoints: {...} }
+ */
+const getApiInfo = async () => {
   const cacheKey = 'api:info';
   const cached = cache.get(cacheKey);
   if (cached) return cached;
@@ -88,6 +126,8 @@ async function getApiInfo() {
 
   cache.set(cacheKey, result, 60 * 60 * 1000);
   return result;
-}
+};
 
 module.exports = { getApiInfo };
+
+// ══════════════════════════════════════════════════════════════ END: info.controller.js

@@ -7,8 +7,11 @@
 - Search endpoint now performs client-side filtering (upstream API ignores `search` param)
 - Genre filter now performs client-side filtering (upstream API ignores `genre` param)
 - Removed duplicate `/docs` route in server.js
+- Fixed double-wrapping of `success` field in JSON responses
+- Fixed variable name collision in search controller (`query` → `searchQuery`)
 
 ### Changed
+- `jsonResponse()` now checks if data already has `success` field to prevent double-wrapping
 - Search fetches full manga list (360) and filters locally by title
 - Genre filter fetches full manga list (360) and filters locally by genre ID
 

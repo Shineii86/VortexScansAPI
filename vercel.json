@@ -1,21 +1,19 @@
 {
   "version": 2,
-  "public": true,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
-    { "src": "/api/home", "dest": "/api/home.js" },
-    { "src": "/api/manga/([^/]*)/chapters", "dest": "/api/manga.js?slug=$1&action=chapters" },
-    { "src": "/api/manga/([^/]*)", "dest": "/api/manga.js?slug=$1" },
-    { "src": "/api/manga", "dest": "/api/manga.js" },
-    { "src": "/api/chapter", "dest": "/api/chapter.js" },
-    { "src": "/api/search", "dest": "/api/search.js" },
-    { "src": "/api/filter", "dest": "/api/filter.js" },
-    { "src": "/api/genres", "dest": "/api/genres.js" },
-    { "src": "/api/status", "dest": "/api/status.js" },
-    { "src": "/api", "dest": "/api/index.js" },
-    { "handle": "filesystem" },
-    { "src": "/docs", "dest": "/public/docs.html" },
-    { "src": "/privacy", "dest": "/public/privacy.html" },
-    { "src": "/tos", "dest": "/public/tos.html" },
-    { "src": "/(.*)", "dest": "/public/404.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
   ]
 }

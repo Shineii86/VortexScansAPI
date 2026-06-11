@@ -1,14 +1,19 @@
 {
   "name": "vortexscans-api",
-  "version": "3.0.0",
+  "version": "5.0.0",
   "description": "Unofficial REST API for Vortex Scans (vortexscans.org)",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "dev": "vercel dev",
-    "deploy": "vercel deploy --prod",
-    "test": "node test.js"
+    "deploy": "vercel deploy --prod"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0"
   },
   "keywords": [
     "manga",

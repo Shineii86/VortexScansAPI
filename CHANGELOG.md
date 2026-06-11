@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.0.0] - 2026-06-11
+
+### Changed
+- Converted from Vercel Serverless Functions to Express server.js
+- Single server.js entry point (matching MiruroAPI architecture)
+- Added CORS middleware with unified origin handling
+- Added security headers (X-Frame-Options, X-Content-Type-Options, etc.)
+- Added rate limiting (100 requests per minute per IP)
+- Simplified vercel.json to 2 routes
+- Added express and cors dependencies
+- Added `npm start` script for local development
+
 ## [5.0.0] - 2026-06-11
 
 ### Added

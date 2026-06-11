@@ -4,62 +4,54 @@
 
 ```
 VortexScansAPI/
-├── api/                              # Vercel Serverless Functions
-│   ├── index.js                      # GET /api — API info endpoint
-│   ├── home.js                       # GET /api/home — Home page data
-│   ├── manga.js                      # GET /api/manga — List, detail, chapters
-│   ├── chapter.js                    # GET /api/chapter — Chapter images
-│   ├── search.js                     # GET /api/search — Search manga
-│   ├── filter.js                     # GET /api/filter — Advanced filter
-│   ├── genres.js                     # GET /api/genres — All genres
-│   └── status.js                     # GET /api/status — Statuses, types
+├── server.js                          # Express entry point, port 3000
+├── package.json                       # name: "vortexscans-api"
+├── vercel.json                        # Routes /api/* and /* to server.js
+│
+├── public/                            # Static files served from process.cwd()
+│   ├── index.html                     # Landing page (hero, features, playground)
+│   ├── docs.html                      # Swagger UI interactive documentation
+│   ├── openapi.json                   # OpenAPI 3.0.3 spec
+│   ├── 404.html                       # Glitch animation error page
+│   ├── manifest.json                  # PWA manifest (theme: #38bdf8)
+│   ├── robots.txt                     # Crawler directives
+│   ├── sitemap.xml                    # 4 pages (/, /tos, /privacy, /api)
+│   ├── icon.svg                       # SVG icon
+│   ├── icon-512x512.png              # PWA icon
+│   ├── favicon.ico                    # Classic favicon
+│   ├── apple-touch-icon-180x180.png  # iOS home screen icon
+│   ├── og-image.png                   # OG/Twitter share image
+│   ├── privacy.html                   # Privacy policy (served at /privacy)
+│   └── tos.html                       # Terms of service (served at /tos)
 │
 ├── src/
-│   ├── controllers/                  # Business logic
-│   │   ├── info.controller.js        # API info response
-│   │   ├── home.controller.js        # Home page aggregation
-│   │   ├── manga.controller.js       # Manga list/detail/chapters
-│   │   ├── chapter.controller.js     # Chapter image extraction
-│   │   ├── search.controller.js      # Search logic
-│   │   ├── filter.controller.js      # Filter logic
-│   │   └── genre.controller.js       # Genres + status metadata
+│   ├── controllers/
+│   │   ├── info.controller.js         # API info response
+│   │   ├── home.controller.js         # Home page aggregation
+│   │   ├── manga.controller.js        # Manga list/detail/chapters
+│   │   ├── chapter.controller.js      # Chapter image extraction
+│   │   ├── search.controller.js       # Search logic
+│   │   ├── filter.controller.js       # Filter logic
+│   │   └── genre.controller.js        # Genres + status metadata
 │   │
-│   ├── extractors/                   # Data transformation
-│   │   ├── manga.extractor.js        # Transform manga/chapter objects
-│   │   └── chapter.extractor.js      # Extract images from HTML
+│   ├── extractors/
+│   │   ├── manga.extractor.js         # Transform manga/chapter objects
+│   │   └── chapter.extractor.js       # Extract images from HTML
 │   │
-│   └── helpers/                      # Shared utilities
-│       ├── cache.helper.js           # In-memory Map with TTL cache
-│       ├── constants.helper.js       # Cache TTLs, base URLs
-│       └── fetch.helper.js           # Vortex API fetch wrapper
+│   └── helpers/
+│       ├── cache.helper.js            # In-memory Map with TTL cache
+│       ├── constants.helper.js        # Cache TTLs, base URLs
+│       └── fetch.helper.js            # Vortex API fetch wrapper
 │
-├── public/                           # Static files
-│   ├── index.html                    # Landing page
-│   ├── 404.html                      # Error page
-│   ├── docs.html                     # Swagger UI
-│   ├── openapi.json                  # OpenAPI 3.0.3 spec
-│   ├── manifest.json                 # PWA manifest
-│   ├── robots.txt                    # SEO crawl rules
-│   ├── sitemap.xml                   # XML sitemap
-│   ├── privacy.html                  # Privacy policy
-│   ├── tos.html                      # Terms of service
-│   ├── icon.svg                      # SVG icon
-│   ├── icon-512x512.png             # PWA icon
-│   ├── favicon.ico                   # Favicon
-│   ├── apple-touch-icon-180x180.png  # iOS icon
-│   └── og-image.png                  # OG/Twitter share image
-│
-├── docs/                             # API documentation
-│   ├── index.md                      # Overview, quick start
-│   ├── endpoints.md                  # Full API reference
-│   ├── examples.md                   # cURL, JavaScript, Python
+├── docs/                              # API documentation
+│   ├── index.md                       # Overview, quick start, features
+│   ├── endpoints.md                   # Full API reference (10 endpoints)
+│   ├── examples.md                    # cURL, JavaScript, Python
 │   └── architecture.md               # This file
 │
-├── vercel.json                       # Vercel routing config
-├── package.json                      # name: "vortexscans-api"
-├── CHANGELOG.md                      # Version history
-├── README.md                         # Full API documentation
-└── LICENSE                           # MIT License
+├── CHANGELOG.md                       # Version history
+├── README.md                          # Full API documentation
+└── LICENSE                            # MIT License
 ```
 
 ## Tech Stack
@@ -67,21 +59,21 @@ VortexScansAPI/
 | Component | Technology |
 |-----------|------------|
 | Runtime | Node.js |
-| Framework | Vercel Serverless Functions (no Express) |
+| Framework | Express.js |
 | Metadata | Vortex Scans API (`api.vortexscans.org/api/query`) |
 | Images | Vortex Scans HTML scraping (`vortexscans.org`) |
 | Deployment | Vercel (Hobby tier) |
 | Caching | In-memory Map with 5-30 min TTL |
-| Static Files | Vercel static hosting (`public/`) |
+| Static Files | Express static middleware |
 
 ## Request Flow
 
 ```
 Client Request
     ↓
-Vercel Routes (/api/* → serverless functions)
+Vercel Routes (/api/* → server.js)
     ↓
-API Handler (e.g., manga.js)
+Express Router (server.js)
     ↓
 Controller (e.g., manga.controller.js)
     ↓
@@ -114,7 +106,7 @@ Response with images[] + navigation (prev/next)
 
 - **Type:** In-memory Map
 - **TTL:** 5-30 minutes depending on endpoint
-- **Max Size:** Unbounded (Vercel hobby tier has limited memory)
+- **Max Size:** Unbounded
 - **Key:** Deterministic from request parameters
 - **Behavior:** First request fetches from source, subsequent requests served from cache
 - **Eviction:** Automatic when TTL expires (lazy eviction on access)
@@ -151,23 +143,22 @@ Response with images[] + navigation (prev/next)
 ```json
 {
   "version": 2,
-  "public": true,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
-    { "src": "/api/home", "dest": "/api/home.js" },
-    { "src": "/api/manga", "dest": "/api/manga.js" },
-    { "src": "/api/chapter", "dest": "/api/chapter.js" },
-    { "src": "/api/search", "dest": "/api/search.js" },
-    { "src": "/api/filter", "dest": "/api/filter.js" },
-    { "src": "/api/genres", "dest": "/api/genres.js" },
-    { "src": "/api/status", "dest": "/api/status.js" },
-    { "src": "/api", "dest": "/api/index.js" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/api/(.*)", "dest": "server.js" },
+    { "src": "/(.*)", "dest": "server.js" }
   ]
 }
 ```
 
-- `/api/*` routes to serverless functions for API handling
-- `/*` routes to static files from `public/`
+- `/api/*` routes to Express for API handling
+- `/*` routes to Express for static file serving
+- Static files served from `process.cwd()` (Vercel serverless compatible)
 
 ## Response Format
 
@@ -176,7 +167,7 @@ All API responses follow this structure:
 ```json
 {
   "success": true,
-  "data": { ... }
+  "results": { ... }
 }
 ```
 
@@ -185,10 +176,13 @@ Error responses:
 ```json
 {
   "success": false,
-  "error": "Error description"
+  "message": "Error description"
 }
 ```
 
 ## Dependencies
 
-This project has **zero dependencies** — it uses only built-in Node.js modules and the global `fetch` API available in Node.js 18+.
+| Package | Version | Purpose |
+|---------|---------|---------|
+| express | ^4.21.0 | Web framework |
+| cors | ^2.8.5 | CORS headers |

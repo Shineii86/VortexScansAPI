@@ -7,6 +7,7 @@ async function getApiInfo() {
   if (cached) return cached;
 
   const result = {
+    success: true,
     name: 'VortexScans API',
     version: '2.0.0',
     description: 'Unofficial REST API for Vortex Scans (vortexscans.org)',

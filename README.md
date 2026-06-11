@@ -8,6 +8,37 @@ Unofficial REST API for [Vortex Scans](https://vortexscans.org).
 https://vortex-scans-api.vercel.app/api
 ```
 
+## Architecture
+
+```
+api/                    # Vercel Serverless Functions
+├── manga.js            # Manga list & detail routes
+├── genres.js           # Genres route
+├── status.js           # Status route
+└── index.js            # API info route
+
+src/
+├── controllers/        # Route handlers
+│   ├── manga.controller.js
+│   ├── genres.controller.js
+│   ├── status.controller.js
+│   └── index.controller.js
+├── extractors/         # Data transformation
+│   └── manga.extractor.js
+└── helpers/            # Utilities
+    ├── cache.helper.js
+    └── constants.helper.js
+```
+
+## Caching
+
+| Endpoint | TTL |
+|----------|-----|
+| `/api/manga` | 5 minutes |
+| `/api/manga/{slug}` | 5 minutes |
+| `/api/genres` | 1 hour |
+| `/api/status` | 24 hours |
+
 ## Endpoints
 
 ### List Manga

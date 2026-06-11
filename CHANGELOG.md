@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0] - 2026-06-11
+
+### Added
+- `src/controllers/` - Route handler logic (manga, genres, status, index)
+- `src/extractors/` - Data transformation logic
+- `src/helpers/cache.helper.js` - In-memory Map with TTL caching
+- `src/helpers/constants.helper.js` - Cache TTL configurations
+- Auto-cleanup of expired cache entries every 60 seconds
+
+### Changed
+- Refactored to controllers/extractors/helpers architecture
+- Manga list cached for 5 minutes
+- Manga detail cached for 5 minutes
+- Genres cached for 1 hour
+- Status cached for 24 hours
+- Improved code organization and separation of concerns
+
 ## [1.1.0] - 2026-06-11
 
 ### Changed
@@ -22,6 +39,5 @@
 - Filter by genre
 - Sort by various fields
 - CORS support for cross-origin requests
-- Response caching (5 minutes for manga, 1 hour for genres)
 - Documentation endpoint at `/api`
 - Comprehensive README with API documentation

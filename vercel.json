@@ -1,8 +1,6 @@
 {
   "version": 2,
   "public": true,
-  "cleanUrls": true,
-  "trailingSlash": false,
   "routes": [
     { "src": "/api/home", "dest": "/api/home.js" },
     { "src": "/api/manga/([^/]*)/chapters", "dest": "/api/manga.js?slug=$1&action=chapters" },
@@ -17,6 +15,7 @@
     { "handle": "filesystem" },
     { "src": "/docs", "dest": "/public/docs.html" },
     { "src": "/privacy", "dest": "/public/privacy.html" },
-    { "src": "/tos", "dest": "/public/tos.html" }
+    { "src": "/tos", "dest": "/public/tos.html" },
+    { "src": "/(.*)", "dest": "/public/404.html" }
   ]
 }

@@ -77,9 +77,9 @@ const extractChapterInfo = (html) => {
   const titleMatch = html.match(/<title>([^<]+)<\/title>/);
   const title = titleMatch ? titleMatch[1].replace(' - Vortex Scans', '').trim() : null;
 
-  // NOTE: Match "Prev" and "Next" navigation links
-  const prevMatch = html.match(/href="[^"]*\/(chapter-[^"]+)"[^>]*>\s*Prev/i);
-  const nextMatch = html.match(/href="[^"]*\/(chapter-[^"]+)"[^>]*>\s*Next/i);
+  // NOTE: Match navigation links via aria-label attribute
+  const prevMatch = html.match(/href="[^"]*\/(chapter-[^"]+)"[^>]*aria-label="Prev"/i);
+  const nextMatch = html.match(/href="[^"]*\/(chapter-[^"]+)"[^>]*aria-label="Next"/i);
 
   return {
     title,

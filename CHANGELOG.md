@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.1.0] - 2026-06-11
+
+### Fixed
+- Chapter navigation regex now matches `aria-label="Prev"` / `aria-label="Next"` instead of text content
+- Search endpoint now performs client-side filtering (upstream API ignores `search` param)
+- Genre filter now performs client-side filtering (upstream API ignores `genre` param)
+- Removed duplicate `/docs` route in server.js
+
+### Changed
+- Search fetches full manga list (360) and filters locally by title
+- Genre filter fetches full manga list (360) and filters locally by genre ID
+
 ## [6.0.0] - 2026-06-11
 
 ### Changed

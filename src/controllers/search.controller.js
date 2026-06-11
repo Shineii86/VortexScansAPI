@@ -54,8 +54,9 @@ const searchManga = async (query) => {
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
+  // NOTE: Upstream API ignores search param — fetch large set and filter locally
   const response = await fetch(
-    `${VORTEX_API}?page=${page}&perPage=${limit}&view=archive&search=${encodeURIComponent(keyword)}&orderBy=lastChapterAddedAt&orderDirection=desc`
+    `${VORTEX_API}?page=1&perPage=360&view=archive&orderBy=lastChapterAddedAt&orderDirection=desc`
   );
 
   if (!response.ok) {
@@ -63,16 +64,28 @@ const searchManga = async (query) => {
   }
 
   const data = await response.json();
+  const allPosts = (data.posts || []).map(transformPost);
+
+  // NOTE: Client-side case-insensitive title filter
+  const query = keyword.toLowerCase();
+  const filtered = allPosts.filter((m) =>
+    m.title && m.title.toLowerCase().includes(query)
+  );
+
+  // NOTE: Paginate the filtered results
+  const total = filtered.length;
+  const start = (page - 1) * limit;
+  const paginated = filtered.slice(start, start + limit);
 
   const result = {
     success: true,
     query: keyword,
-    data: (data.posts || []).map(transformPost),
+    data: paginated,
     pagination: {
       page,
       limit,
-      total: data.totalCount || 0,
-      totalPages: Math.ceil((data.totalCount || 0) / limit),
+      total,
+      totalPages: Math.ceil(total / limit),
     },
   };
 

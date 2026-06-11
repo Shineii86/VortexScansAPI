@@ -56,7 +56,14 @@ const filterManga = async (query) => {
 
   if (query.type) params.seriesType = query.type.toUpperCase();
   if (query.status) params.seriesStatus = query.status.toUpperCase();
-  if (query.genre) params.genre = query.genre;
+
+  // NOTE: Upstream API supports seriesType and seriesStatus, but NOT genre
+  // For genre filtering, fetch large set and filter locally
+  const needsLocalGenreFilter = !!query.genre;
+  if (needsLocalGenreFilter) {
+    params.perPage = 360;
+    params.page = 1;
+  }
 
   const cacheKey = cache.getCacheKey('filter', params);
   const cached = cache.get(cacheKey);
@@ -70,6 +77,21 @@ const filterManga = async (query) => {
   }
 
   const data = await response.json();
+  let posts = (data.posts || []).map(transformPost);
+  let totalCount = data.totalCount || 0;
+
+  // NOTE: Client-side genre filter — match genre ID in post's genre list
+  if (needsLocalGenreFilter) {
+    const genreId = parseInt(query.genre);
+    posts = posts.filter((m) =>
+      m.genres && m.genres.some((g) => g.id === genreId)
+    );
+    totalCount = posts.length;
+
+    // NOTE: Paginate locally after filtering
+    const start = (params.page - 1) * params.perPage;
+    posts = posts.slice(start, start + params.perPage);
+  }
 
   const result = {
     success: true,
@@ -80,12 +102,12 @@ const filterManga = async (query) => {
       sort: query.sort || 'lastChapterAddedAt',
       direction: query.direction || 'desc',
     },
-    data: (data.posts || []).map(transformPost),
+    data: posts,
     pagination: {
-      page: params.page,
-      limit: params.perPage,
-      total: data.totalCount || 0,
-      totalPages: Math.ceil((data.totalCount || 0) / params.perPage),
+      page: needsLocalGenreFilter ? parseInt(query.page) || 1 : params.page,
+      limit: needsLocalGenreFilter ? (parseInt(query.limit) || 48) : params.perPage,
+      total: totalCount,
+      totalPages: Math.ceil(totalCount / (needsLocalGenreFilter ? (parseInt(query.limit) || 48) : params.perPage)),
     },
   };
 

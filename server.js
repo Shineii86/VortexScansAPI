@@ -174,12 +174,14 @@ app.get("/api/manga", async (req, res) => {
 
     if (slug && action === "chapters") {
       const result = await getMangaChapters(slug, req.query);
-      return res.status(result.status || 200).json(result);
+      if (result.status) return res.status(result.status).json(result);
+      return jsonResponse(res, result);
     }
 
     if (slug) {
       const result = await getMangaBySlug(slug, req.query);
-      return res.status(result.status || 200).json(result);
+      if (result.status) return res.status(result.status).json(result);
+      return jsonResponse(res, result);
     }
 
     const result = await getMangaList(req.query);
@@ -199,7 +201,8 @@ app.get("/api/chapter", async (req, res) => {
     }
 
     const result = await getChapterImages(slug, chapter);
-    res.status(result.status || 200).json(result);
+    if (result.status) return res.status(result.status).json(result);
+    jsonResponse(res, result);
   } catch (err) {
     jsonError(res, err.message);
   }

@@ -67,9 +67,9 @@ const searchManga = async (query) => {
   const allPosts = (data.posts || []).map(transformPost);
 
   // NOTE: Client-side case-insensitive title filter
-  const query = keyword.toLowerCase();
+  const searchQuery = keyword.toLowerCase();
   const filtered = allPosts.filter((m) =>
-    m.title && m.title.toLowerCase().includes(query)
+    m.title && m.title.toLowerCase().includes(searchQuery)
   );
 
   // NOTE: Paginate the filtered results

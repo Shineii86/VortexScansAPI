@@ -86,13 +86,18 @@ app.get("/tos", (req, res) => {
 // ---- FEATURE: Standardized JSON response wrapper ----
 /**
  * Wraps data in a standardized success JSON response.
+ * If data already has a `success` field, returns it as-is.
  *
  * @param {object} res - Express response object
  * @param {*} data - The data to return in the response
  * @param {number} status - HTTP status code (default: 200)
  */
-const jsonResponse = (res, data, status = 200) =>
-  res.status(status).json({ success: true, results: data });
+const jsonResponse = (res, data, status = 200) => {
+  if (data && typeof data === 'object' && 'success' in data) {
+    return res.status(status).json(data);
+  }
+  return res.status(status).json({ success: true, results: data });
+};
 
 // ---- FEATURE: Standardized error response wrapper ----
 /**

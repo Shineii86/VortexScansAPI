@@ -15,12 +15,6 @@
     { "src": "/docs", "dest": "/public/docs.html" },
     { "src": "/privacy", "dest": "/public/privacy.html" },
     { "src": "/tos", "dest": "/public/tos.html" },
-    { "src": "/sitemap.xml", "dest": "/public/sitemap.xml" },
-    { "src": "/robots.txt", "dest": "/public/robots.txt" },
-    { "src": "/manifest.json", "dest": "/public/manifest.json" },
-    { "src": "/openapi.json", "dest": "/public/openapi.json" },
-    { "src": "/(icon|favicon|apple-touch-icon|og-image)(.*)", "dest": "/public/$1$2" },
-    { "src": "/404", "dest": "/public/404.html" },
-    { "src": "/", "dest": "/public/index.html" }
+    { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }

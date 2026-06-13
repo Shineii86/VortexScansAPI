@@ -16,7 +16,7 @@
  * ======= • ======= • ======= • ======= • =======• =======
  */
 
-const { VORTEX_API, VORTEX_CHAPTERS } = require('../helpers/constants.helper');
+const { VORTEX_API, VORTEX_CHAPTERS, VORTEX_CHAPTER } = require('../helpers/constants.helper');
 
 // ══════════════════════════════════════════════════════════════
 // API FETCH WRAPPER
@@ -82,6 +82,27 @@ const fetchChapters = async (postId, page = 1, perPage = 100) => {
   return response.json();
 };
 
-module.exports = { fetchVortex, fetchChapters };
+// ---- FEATURE: Fetch single chapter detail with images ----
+/**
+ * Fetches chapter detail from the Vortex Scans /api/chapter endpoint.
+ * Returns images array, navigation (prev/next), and chapter metadata.
+ *
+ * @param {string} mangaSlug - Manga URL slug
+ * @param {string} chapterSlug - Chapter URL slug (e.g., "chapter-1")
+ * @returns {Promise<object>} Parsed JSON response with chapter detail
+ * @throws {Error} If API response is not OK
+ */
+const fetchChapter = async (mangaSlug, chapterSlug) => {
+  const searchParams = new URLSearchParams({ mangaslug: mangaSlug, chapterslug: chapterSlug });
+  const response = await fetch(`${VORTEX_CHAPTER}?${searchParams}`);
+
+  if (!response.ok) {
+    throw new Error(`Vortex chapter API error: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+module.exports = { fetchVortex, fetchChapters, fetchChapter };
 
 // ══════════════════════════════════════════════════════════════ END: fetch.helper.js

@@ -22,6 +22,13 @@ const { fetchVortex, fetchChapters } = require('../helpers/fetch.helper');
 const { transformMangaList } = require('../extractors/manga.extractor');
 
 // ══════════════════════════════════════════════════════════════
+// INPUT VALIDATION
+// ══════════════════════════════════════════════════════════════
+
+const sanitizePage = (val) => Math.max(parseInt(val) || 1, 1);
+const sanitizeLimit = (val, max = 100) => Math.min(Math.max(parseInt(val) || 48, 1), max);
+
+// ══════════════════════════════════════════════════════════════
 // MANGA LIST
 // ══════════════════════════════════════════════════════════════
 
@@ -44,8 +51,8 @@ const { transformMangaList } = require('../extractors/manga.extractor');
  */
 const getMangaList = async (query) => {
   const params = {
-    page: parseInt(query.page) || 1,
-    perPage: Math.min(parseInt(query.limit) || 48, 100),
+    page: sanitizePage(query.page),
+    perPage: sanitizeLimit(query.limit, 100),
   };
 
   if (query.search) params.search = query.search;
@@ -94,8 +101,8 @@ const getMangaBySlug = async (slug, query) => {
     return { success: false, error: 'Manga not found', status: 404 };
   }
 
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 50;
+  const page = sanitizePage(query.page);
+  const limit = sanitizeLimit(query.limit, 100);
 
   const chaptersData = await fetchChapters(post.id, page, limit);
   const allChapters = (chaptersData.post?.chapters || []).map((ch) => ({
@@ -164,8 +171,8 @@ const getMangaChapters = async (slug, query) => {
     return { success: false, error: 'Manga not found', status: 404 };
   }
 
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 50;
+  const page = sanitizePage(query.page);
+  const limit = sanitizeLimit(query.limit, 100);
 
   const chaptersData = await fetchChapters(post.id, page, limit);
   const allChapters = (chaptersData.post?.chapters || []).map((ch) => ({

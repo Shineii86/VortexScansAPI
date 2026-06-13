@@ -137,7 +137,6 @@ module.exports = {
   transformPost,
   transformChapter,
   transformMangaList,
-  transformMangaDetail,
 };
 
 // ══════════════════════════════════════════════════════════════ END: manga.extractor.js

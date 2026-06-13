@@ -1,5 +1,20 @@
 # Changelog
 
+## [6.2.0] - 2026-06-13
+
+### Fixed
+- Chapter images endpoint now returns actual page images (was returning 0)
+- Replaced broken HTML scraping with upstream `/api/chapter` API endpoint
+- Input validation: `page` clamped to >= 1, `limit` clamped to 1-100 range
+- Negative page values no longer crash with upstream 500 error
+- Limit > 100 no longer crashes with upstream 502 error
+
+### Changed
+- Chapter controller now uses `fetchChapter()` from upstream API instead of scraping vortexscans.org HTML
+- Added `VORTEX_CHAPTER` constant for `/api/chapter` endpoint
+- Added `fetchChapter()` function in fetch helper
+- Removed unused `transformMangaDetail` export from manga extractor
+
 ## [6.1.0] - 2026-06-11
 
 ### Fixed

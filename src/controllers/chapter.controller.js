@@ -4,9 +4,9 @@
  * Repository: https://github.com/Shineii86/VortexScansAPI
  *
  * @description
- *   Business logic for chapter image extraction. Fetches chapter HTML
- *   from vortexscans.org, extracts image URLs from storage CDN,
- *   and returns navigation metadata (prev/next chapters).
+ *   Business logic for chapter image retrieval. Fetches chapter data
+ *   from the Vortex Scans /api/chapter endpoint, returning page images,
+ *   navigation metadata (prev/next chapters), and chapter details.
  *
  * @exports
  *   getChapterImages
@@ -18,20 +18,18 @@
 
 const cache = require('../helpers/cache.helper');
 const { CACHE_TTL, VORTEX_SITE } = require('../helpers/constants.helper');
-const { extractChapterImages, extractChapterInfo } = require('../extractors/chapter.extractor');
+const { fetchChapter } = require('../helpers/fetch.helper');
 
 // ══════════════════════════════════════════════════════════════
 // CHAPTER IMAGE RETRIEVAL
 // ══════════════════════════════════════════════════════════════
 
-// ---- FEATURE: Extract images + navigation from chapter page ----
+// ---- FEATURE: Fetch chapter images + navigation from API ----
 /**
- * Fetches a chapter page from Vortex Scans and extracts:
- * - All page image URLs from the storage CDN
- * - Chapter title from the HTML title tag
- * - Previous/next chapter slugs for navigation
+ * Fetches chapter data from the Vortex Scans upstream API.
+ * Returns all page image URLs, chapter metadata, and prev/next navigation.
  *
- * Returns 404 if the chapter page doesn't exist.
+ * Returns 404 if the chapter doesn't exist or is not accessible.
  *
  * @param {string} slug - Manga URL slug
  * @param {string} chapterSlug - Chapter URL slug (e.g., "chapter-1")
@@ -46,31 +44,49 @@ const getChapterImages = async (slug, chapterSlug) => {
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const url = `${VORTEX_SITE}/series/${slug}/${chapterSlug}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
+  let data;
+  try {
+    data = await fetchChapter(slug, chapterSlug);
+  } catch (err) {
     return { success: false, error: 'Chapter not found', status: 404 };
   }
 
-  const html = await response.text();
-  const images = extractChapterImages(html);
-  const info = extractChapterInfo(html);
+  const chapter = data.chapter;
+  if (!chapter) {
+    return { success: false, error: 'Chapter not found', status: 404 };
+  }
+
+  const images = (chapter.images || [])
+    .sort((a, b) => a.order - b.order)
+    .map((img) => ({
+      page: img.order + 1,
+      url: img.url,
+      width: img.width,
+      height: img.height,
+    }));
 
   const result = {
     success: true,
-    manga: { slug },
+    manga: {
+      slug,
+      title: chapter.mangaPost?.postTitle || null,
+      image: chapter.mangaPost?.featuredImage || null,
+    },
     chapter: {
-      slug: chapterSlug,
-      title: info.title,
-      images,
+      id: chapter.id,
+      slug: chapter.slug,
+      number: chapter.number,
+      title: chapter.title || null,
+      createdAt: chapter.createdAt,
       totalPages: images.length,
+      images,
+      team: chapter.team || null,
       navigation: {
-        prev: info.prevChapter
-          ? { slug: info.prevChapter, url: `${VORTEX_SITE}/series/${slug}/${info.prevChapter}` }
+        prev: data.previousChapter
+          ? { slug: data.previousChapter.slug, number: data.previousChapter.number, title: data.previousChapter.title, url: `${VORTEX_SITE}/series/${slug}/${data.previousChapter.slug}` }
           : null,
-        next: info.nextChapter
-          ? { slug: info.nextChapter, url: `${VORTEX_SITE}/series/${slug}/${info.nextChapter}` }
+        next: data.nextChapter
+          ? { slug: data.nextChapter.slug, number: data.nextChapter.number, title: data.nextChapter.title, url: `${VORTEX_SITE}/series/${slug}/${data.nextChapter.slug}` }
           : null,
       },
     },

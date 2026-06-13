@@ -50,6 +50,7 @@ const CACHE_TTL = {
  */
 const VORTEX_API = 'https://api.vortexscans.org/api/query';
 const VORTEX_CHAPTERS = 'https://api.vortexscans.org/api/chapters';
+const VORTEX_CHAPTER = 'https://api.vortexscans.org/api/chapter';
 
 // ---- FEATURE: Vortex Scans website URL ----
 /**
@@ -60,6 +61,6 @@ const VORTEX_CHAPTERS = 'https://api.vortexscans.org/api/chapters';
  */
 const VORTEX_SITE = 'https://vortexscans.org';
 
-module.exports = { CACHE_TTL, VORTEX_API, VORTEX_CHAPTERS, VORTEX_SITE };
+module.exports = { CACHE_TTL, VORTEX_API, VORTEX_CHAPTERS, VORTEX_CHAPTER, VORTEX_SITE };
 
 // ══════════════════════════════════════════════════════════════ END: constants.helper.js

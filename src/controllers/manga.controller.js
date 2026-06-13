@@ -18,8 +18,8 @@
 
 const cache = require('../helpers/cache.helper');
 const { CACHE_TTL } = require('../helpers/constants.helper');
-const { fetchVortex } = require('../helpers/fetch.helper');
-const { transformMangaList, transformMangaDetail } = require('../extractors/manga.extractor');
+const { fetchVortex, fetchChapters } = require('../helpers/fetch.helper');
+const { transformMangaList } = require('../extractors/manga.extractor');
 
 // ══════════════════════════════════════════════════════════════
 // MANGA LIST
@@ -96,7 +96,42 @@ const getMangaBySlug = async (slug, query) => {
 
   const page = parseInt(query.page) || 1;
   const limit = parseInt(query.limit) || 50;
-  const result = transformMangaDetail(post, page, limit);
+
+  const chaptersData = await fetchChapters(post.id, page, limit);
+  const allChapters = (chaptersData.post?.chapters || []).map((ch) => ({
+    id: ch.id,
+    number: ch.number,
+    title: ch.title || null,
+    slug: ch.slug,
+    createdAt: ch.createdAt,
+    locked: ch.isLocked,
+    accessible: ch.isAccessible,
+  }));
+
+  const total = chaptersData.totalChapterCount || allChapters.length;
+
+  const result = {
+    success: true,
+    data: {
+      id: post.id,
+      slug: post.slug,
+      title: post.postTitle,
+      image: post.featuredImage,
+      type: post.seriesType?.toLowerCase(),
+      status: post.seriesStatus?.toLowerCase(),
+      hot: post.hot,
+      pinned: post.isPinned,
+      rating: post.averageRating,
+      genres: (post.genres || []).map((g) => ({ id: g.id, name: g.name })),
+      chapters: allChapters,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    },
+  };
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_DETAIL);
   return result;
@@ -129,7 +164,11 @@ const getMangaChapters = async (slug, query) => {
     return { success: false, error: 'Manga not found', status: 404 };
   }
 
-  const allChapters = (post.chapters || []).map((ch) => ({
+  const page = parseInt(query.page) || 1;
+  const limit = parseInt(query.limit) || 50;
+
+  const chaptersData = await fetchChapters(post.id, page, limit);
+  const allChapters = (chaptersData.post?.chapters || []).map((ch) => ({
     id: ch.id,
     number: ch.number,
     title: ch.title || null,
@@ -140,10 +179,7 @@ const getMangaChapters = async (slug, query) => {
     url: `https://vortexscans.org/series/${slug}/${ch.slug}`,
   }));
 
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 50;
-  const total = allChapters.length;
-  const start = (page - 1) * limit;
+  const total = chaptersData.totalChapterCount || allChapters.length;
 
   const result = {
     success: true,
@@ -152,7 +188,7 @@ const getMangaChapters = async (slug, query) => {
       title: post.postTitle,
       image: post.featuredImage,
     },
-    data: allChapters.slice(start, start + limit),
+    data: allChapters,
     pagination: {
       page,
       limit,

@@ -4,9 +4,8 @@
  * Repository: https://github.com/Shineii86/VortexScansAPI
  *
  * @description
- *   Business logic for manga search endpoint. Performs full-text
- *   search against the Vortex Scans API with pagination and
- *   sorting options.
+ *   Business logic for manga search. Uses /api/posts with search param
+ *   for server-side full-text search with pagination.
  *
  * @exports
  *   searchManga
@@ -17,75 +16,44 @@
  */
 
 const cache = require('../helpers/cache.helper');
-const { CACHE_TTL, VORTEX_API } = require('../helpers/constants.helper');
-const { transformPost } = require('../extractors/manga.extractor');
+const { CACHE_TTL } = require('../helpers/constants.helper');
+const { fetchPosts } = require('../helpers/fetch.helper');
 
-// ══════════════════════════════════════════════════════════════
-// MANGA SEARCH
-// ══════════════════════════════════════════════════════════════
-
-// ---- FEATURE: Full-text manga search with pagination ----
-/**
- * Searches for manga by keyword using the Vortex Scans API.
- * Supports multiple query parameter names (q, keyword, search).
- * Returns paginated results sorted by latest chapter update.
- *
- * @param {object} query - Request query parameters
- * @param {string} query.q|keyword|search - Search keyword (required)
- * @param {number} [query.page=1] - Page number
- * @param {number} [query.limit=20] - Results per page (max 100)
- * @returns {Promise<object>} Search results with pagination
- * @throws {Error} If Vortex API returns non-OK status
- *
- * @example
- *   const results = await searchManga({ q: "naruto", page: 1 });
- *   // { success: true, query: "naruto", data: [...], pagination: {...} }
- */
 const searchManga = async (query) => {
   const keyword = query.q || query.keyword || query.search;
-  if (!keyword) {
-    return { success: false, error: 'Search term required (use ?q=keyword)' };
-  }
+  if (!keyword) return { error: 'Search term required (use ?q=keyword)' };
 
-  const page = parseInt(query.page) || 1;
-  const limit = Math.min(parseInt(query.limit) || 20, 100);
+  const page = Math.max(parseInt(query.page) || 1, 1);
+  const perPage = Math.min(Math.max(parseInt(query.limit) || 20, 1), 100);
 
-  const cacheKey = cache.getCacheKey('search', { keyword, page, limit });
+  const cacheKey = cache.getCacheKey('search', { keyword, page, perPage });
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  // NOTE: Upstream API ignores search param — fetch large set and filter locally
-  const response = await fetch(
-    `${VORTEX_API}?page=1&perPage=360&view=archive&orderBy=lastChapterAddedAt&orderDirection=desc`
-  );
+  const data = await fetchPosts({ search: keyword, page, perPage });
+  const posts = (data.posts || []).map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.postTitle,
+    image: p.featuredImage,
+    type: p.seriesType?.toLowerCase(),
+    status: p.seriesStatus?.toLowerCase(),
+    rating: p.averageRating,
+    genres: (p.genres || []).map((g) => ({ id: g.id, name: g.name })),
+    chaptersCount: p._count?.chapters || 0,
+  }));
 
-  if (!response.ok) {
-    throw new Error(`Vortex API error: ${response.status}`);
-  }
-
-  const data = await response.json();
-  const allPosts = (data.posts || []).map(transformPost);
-
-  // NOTE: Client-side case-insensitive title filter
-  const searchQuery = keyword.toLowerCase();
-  const filtered = allPosts.filter((m) =>
-    m.title && m.title.toLowerCase().includes(searchQuery)
-  );
-
-  // NOTE: Paginate the filtered results
-  const total = filtered.length;
-  const start = (page - 1) * limit;
-  const paginated = filtered.slice(start, start + limit);
-
+  const total = data.totalCount || 0;
+  const lastPage = Math.ceil(total / perPage) || 1;
   const result = {
-    success: true,
-    query: keyword,
-    data: paginated,
+    data: posts,
     pagination: {
-      page,
-      limit,
       total,
-      totalPages: Math.ceil(total / limit),
+      perPage,
+      currentPage: page,
+      lastPage,
+      hasNext: page < lastPage,
+      hasPrevious: page > 1,
     },
   };
 

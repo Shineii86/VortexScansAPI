@@ -5,8 +5,7 @@
  *
  * @description
  *   Business logic for manga endpoints. Handles listing, detail view,
- *   and chapter retrieval. Integrates with cache, fetch, and extractor
- *   layers for complete request processing.
+ *   and chapter retrieval. Returns { data, pagination } format.
  *
  * @exports
  *   getMangaList, getMangaBySlug, getMangaChapters
@@ -18,43 +17,32 @@
 
 const cache = require('../helpers/cache.helper');
 const { CACHE_TTL } = require('../helpers/constants.helper');
-const { fetchVortex, fetchChapters } = require('../helpers/fetch.helper');
-const { transformMangaList } = require('../extractors/manga.extractor');
-
-// ══════════════════════════════════════════════════════════════
-// INPUT VALIDATION
-// ══════════════════════════════════════════════════════════════
+const { fetchQuery, fetchPosts, fetchChapters } = require('../helpers/fetch.helper');
 
 const sanitizePage = (val) => Math.max(parseInt(val) || 1, 1);
 const sanitizeLimit = (val, max = 100) => Math.min(Math.max(parseInt(val) || 48, 1), max);
+
+const makePagination = (total, perPage, currentPage) => {
+  const lastPage = Math.ceil(total / perPage) || 1;
+  return {
+    total,
+    perPage,
+    currentPage,
+    lastPage,
+    hasNext: currentPage < lastPage,
+    hasPrevious: currentPage > 1,
+  };
+};
 
 // ══════════════════════════════════════════════════════════════
 // MANGA LIST
 // ══════════════════════════════════════════════════════════════
 
-// ---- FEATURE: Paginated manga list with filtering ----
-/**
- * Retrieves a paginated list of manga with optional filtering.
- * Supports search, type, status, genre, sort order, and direction.
- *
- * @param {object} query - Request query parameters
- * @param {number} [query.page=1] - Page number
- * @param {number} [query.limit=48] - Results per page (max 100)
- * @param {string} [query.search] - Search keyword
- * @param {string} [query.type] - Series type (manhwa/manga/manhua)
- * @param {string} [query.status] - Series status (ongoing/hiatus/completed)
- * @param {string} [query.genre] - Genre filter
- * @param {string} [query.order] - Sort field
- * @param {string} [query.direction] - Sort direction (asc/desc)
- * @param {string} [query.hot] - Hot manga filter
- * @returns {Promise<object>} Paginated manga list
- */
 const getMangaList = async (query) => {
-  const params = {
-    page: sanitizePage(query.page),
-    perPage: sanitizeLimit(query.limit, 100),
-  };
+  const page = sanitizePage(query.page);
+  const perPage = sanitizeLimit(query.limit, 100);
 
+  const params = { page, perPage };
   if (query.search) params.search = query.search;
   if (query.type) params.seriesType = query.type.toUpperCase();
   if (query.status) params.seriesStatus = query.status.toUpperCase();
@@ -67,8 +55,34 @@ const getMangaList = async (query) => {
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const data = await fetchVortex(params);
-  const result = transformMangaList(data, params);
+  const data = await fetchQuery(params);
+  const posts = (data.posts || []).map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.postTitle,
+    image: p.featuredImage,
+    type: p.seriesType?.toLowerCase(),
+    status: p.seriesStatus?.toLowerCase(),
+    hot: p.hot,
+    pinned: p.isPinned,
+    rating: p.averageRating,
+    genres: (p.genres || []).map((g) => ({ id: g.id, name: g.name })),
+    chapters: (p.chapters || []).map((ch) => ({
+      id: ch.id,
+      number: ch.number,
+      title: ch.title || null,
+      slug: ch.slug,
+      createdAt: ch.createdAt,
+      locked: ch.isLocked,
+      accessible: ch.isAccessible,
+    })),
+  }));
+
+  const total = data.totalCount || 0;
+  const result = {
+    data: posts,
+    pagination: makePagination(total, perPage, page),
+  };
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_LIST);
   return result;
@@ -78,34 +92,25 @@ const getMangaList = async (query) => {
 // MANGA DETAIL
 // ══════════════════════════════════════════════════════════════
 
-// ---- FEATURE: Single manga detail by slug ----
-/**
- * Retrieves detailed information for a single manga by slug.
- * Searches the API and finds the matching post. Returns 404 if not found.
- *
- * @param {string} slug - Manga URL slug
- * @param {object} query - Request query parameters
- * @param {number} [query.page=1] - Chapter page number
- * @param {number} [query.limit=50] - Chapters per page
- * @returns {Promise<object>} Manga detail with paginated chapters
- */
 const getMangaBySlug = async (slug, query) => {
-  const cacheKey = cache.getCacheKey('manga-detail', { slug, ...query });
+  const cacheKey = cache.getCacheKey('manga-detail', { slug });
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const data = await fetchVortex({ search: slug, perPage: 100 });
+  const data = await fetchPosts({ search: slug, perPage: 100 });
   const post = (data.posts || []).find((p) => p.slug === slug);
 
-  if (!post) {
-    return { success: false, error: 'Manga not found', status: 404 };
-  }
+  if (!post) return { error: 'Manga not found', status: 404 };
 
   const page = sanitizePage(query.page);
   const limit = sanitizeLimit(query.limit, 100);
 
-  const chaptersData = await fetchChapters(post.id, page, limit);
-  const allChapters = (chaptersData.post?.chapters || []).map((ch) => ({
+  const chaptersData = await fetchChapters(post.id);
+  const total = chaptersData.totalChapterCount || 0;
+  const allChapters = (chaptersData.post?.chapters || []);
+
+  const start = (page - 1) * limit;
+  const paginatedChapters = allChapters.slice(start, start + limit).map((ch) => ({
     id: ch.id,
     number: ch.number,
     title: ch.title || null,
@@ -113,31 +118,31 @@ const getMangaBySlug = async (slug, query) => {
     createdAt: ch.createdAt,
     locked: ch.isLocked,
     accessible: ch.isAccessible,
+    price: ch.price || 0,
+    likesCount: ch.likesCount || 0,
+    commentsCount: ch._count?.comments || 0,
   }));
 
-  const total = chaptersData.totalChapterCount || allChapters.length;
-
   const result = {
-    success: true,
     data: {
       id: post.id,
       slug: post.slug,
       title: post.postTitle,
+      alternativeTitles: post.alternativeTitles || null,
       image: post.featuredImage,
       type: post.seriesType?.toLowerCase(),
       status: post.seriesStatus?.toLowerCase(),
       hot: post.hot,
+      isNew: post.isNew,
       pinned: post.isPinned,
       rating: post.averageRating,
+      totalViews: post.totalViews || 0,
+      releaseDate: post.releaseDate || null,
+      lastChapterAddedAt: post.lastChapterAddedAt || null,
       genres: (post.genres || []).map((g) => ({ id: g.id, name: g.name })),
-      chapters: allChapters,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
+      chapters: paginatedChapters,
     },
+    pagination: makePagination(total, limit, page),
   };
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_DETAIL);
@@ -148,60 +153,50 @@ const getMangaBySlug = async (slug, query) => {
 // MANGA CHAPTERS
 // ══════════════════════════════════════════════════════════════
 
-// ---- FEATURE: Paginated chapter list for a manga ----
-/**
- * Retrieves all chapters for a manga with pagination.
- * Returns manga metadata (title, image) along with chapter list.
- *
- * @param {string} slug - Manga URL slug
- * @param {object} query - Request query parameters
- * @param {number} [query.page=1] - Chapter page number
- * @param {number} [query.limit=50] - Chapters per page
- * @returns {Promise<object>} Chapter list with manga info
- */
 const getMangaChapters = async (slug, query) => {
-  const cacheKey = cache.getCacheKey('manga-chapters', { slug, ...query });
+  const cacheKey = cache.getCacheKey('manga-chapters', { slug });
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const data = await fetchVortex({ search: slug, perPage: 100 });
+  const data = await fetchPosts({ search: slug, perPage: 100 });
   const post = (data.posts || []).find((p) => p.slug === slug);
 
-  if (!post) {
-    return { success: false, error: 'Manga not found', status: 404 };
-  }
+  if (!post) return { error: 'Manga not found', status: 404 };
 
   const page = sanitizePage(query.page);
   const limit = sanitizeLimit(query.limit, 100);
 
-  const chaptersData = await fetchChapters(post.id, page, limit);
-  const allChapters = (chaptersData.post?.chapters || []).map((ch) => ({
+  const chaptersData = await fetchChapters(post.id);
+  const total = chaptersData.totalChapterCount || 0;
+  const allChapters = (chaptersData.post?.chapters || []);
+
+  const start = (page - 1) * limit;
+  const paginatedChapters = allChapters.slice(start, start + limit).map((ch) => ({
     id: ch.id,
     number: ch.number,
     title: ch.title || null,
     slug: ch.slug,
     createdAt: ch.createdAt,
+    updatedAt: ch.updatedAt,
     locked: ch.isLocked,
     accessible: ch.isAccessible,
+    price: ch.price || 0,
+    likesCount: ch.likesCount || 0,
+    commentsCount: ch._count?.comments || 0,
     url: `https://vortexscans.org/series/${slug}/${ch.slug}`,
   }));
 
-  const total = chaptersData.totalChapterCount || allChapters.length;
-
   const result = {
-    success: true,
-    manga: {
-      slug: post.slug,
-      title: post.postTitle,
-      image: post.featuredImage,
+    data: {
+      manga: {
+        id: post.id,
+        slug: post.slug,
+        title: post.postTitle,
+        image: post.featuredImage,
+      },
+      chapters: paginatedChapters,
     },
-    data: allChapters,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-    },
+    pagination: makePagination(total, limit, page),
   };
 
   cache.set(cacheKey, result, CACHE_TTL.MANGA_DETAIL);

@@ -1,5 +1,35 @@
 # Changelog
 
+## [7.0.0] - 2026-06-13
+
+### Changed (BREAKING)
+- All API routes now under `/api/v1/` prefix (e.g., `/api/v1/manga`, `/api/v1/chapter/:chapterId`)
+- Response envelope: `{ success: true, data, pagination }` on all endpoints
+- Chapter endpoint now uses `chapterId` parameter: `/api/v1/chapter/:chapterId`
+- Manga detail and chapters endpoints now use `/api/posts` for richer data (alternativeTitles, totalViews, releaseDate, etc.)
+- Search now uses server-side `/api/posts?search=` instead of client-side filtering
+- Genres now fetched from upstream `/api/genres` directly (65 genres)
+- Rate limiting increased to 60 req/min with proper headers
+
+### Added
+- `/api/v1/health` — Health check with upstream probe and latency tracking
+- `/api/v1/stats` — API statistics, endpoint listing, and version info
+- `/api/v1/collections` — All curated manga collections
+- `/api/v1/collections/:slug` — Collection detail with works and tags
+- `/api/v1/teams` — All scanlation teams with pagination
+- `/api/v1/manga/:slug/chapters` — RESTful alias for chapter listing
+- Pagination headers: `X-Pagination-Total`, `X-Pagination-Per-Page`, `X-Pagination-Current-Page`, `X-Pagination-Last-Page`, `X-Pagination-Has-Next`, `X-Pagination-Has-Previous`
+- Rate limit headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, `Retry-After`
+- Legacy redirects from old `/api/*` routes to new `/api/v1/*` routes
+- Collection and team controllers
+- Upstream fetch helpers: `fetchQuery`, `fetchPosts`, `fetchGenres`, `fetchCollections`, `fetchCollectionDetail`, `fetchTeams`
+
+### Fixed
+- Chapter images endpoint now returns actual page images using `/api/chapter?chapterId=` (was broken with slug params)
+- Input validation: `page` clamped to >= 1, `limit` clamped to 1-100
+- Removed unused `transformMangaDetail` and `transformMangaList` exports
+- Genres endpoint now returns all 65 genres from upstream API
+
 ## [6.2.0] - 2026-06-13
 
 ### Fixed

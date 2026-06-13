@@ -46,7 +46,7 @@ const getApiInfo = async () => {
   const result = {
     success: true,
     name: 'VortexScans API',
-    version: '4.0.0',
+    version: '7.0.0',
     description: 'Unofficial REST API for Vortex Scans (vortexscans.org)',
     author: 'Shineii86',
     endpoints: {

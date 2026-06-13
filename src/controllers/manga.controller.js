@@ -17,7 +17,7 @@
 
 const cache = require('../helpers/cache.helper');
 const { CACHE_TTL } = require('../helpers/constants.helper');
-const { fetchQuery, fetchPosts, fetchChapters } = require('../helpers/fetch.helper');
+const { fetchQuery, fetchAllPosts, fetchChapters } = require('../helpers/fetch.helper');
 
 const sanitizePage = (val) => Math.max(parseInt(val) || 1, 1);
 const sanitizeLimit = (val, max = 100) => Math.min(Math.max(parseInt(val) || 48, 1), max);
@@ -97,8 +97,10 @@ const getMangaBySlug = async (slug, query) => {
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const data = await fetchPosts({ search: slug, perPage: 100 });
-  const post = (data.posts || []).find((p) => p.slug === slug);
+  // NOTE: /api/posts?search=X is broken upstream — always returns pinned posts.
+  // Fetch all manga via /api/query and match client-side.
+  const allPosts = await fetchAllPosts();
+  const post = allPosts.find((p) => p.slug === slug);
 
   if (!post) return { error: 'Manga not found', status: 404 };
 
@@ -158,8 +160,10 @@ const getMangaChapters = async (slug, query) => {
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const data = await fetchPosts({ search: slug, perPage: 100 });
-  const post = (data.posts || []).find((p) => p.slug === slug);
+  // NOTE: /api/posts?search=X is broken upstream — always returns pinned posts.
+  // Fetch all manga via /api/query and match client-side.
+  const allPosts = await fetchAllPosts();
+  const post = allPosts.find((p) => p.slug === slug);
 
   if (!post) return { error: 'Manga not found', status: 404 };
 

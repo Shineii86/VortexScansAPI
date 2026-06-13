@@ -17,7 +17,7 @@
 
 const cache = require('../helpers/cache.helper');
 const { CACHE_TTL } = require('../helpers/constants.helper');
-const { fetchPosts } = require('../helpers/fetch.helper');
+const { fetchAllPosts } = require('../helpers/fetch.helper');
 
 const searchManga = async (query) => {
   const keyword = query.q || query.keyword || query.search;
@@ -30,8 +30,20 @@ const searchManga = async (query) => {
   const cached = cache.get(cacheKey);
   if (cached) return cached;
 
-  const data = await fetchPosts({ search: keyword, page, perPage });
-  const posts = (data.posts || []).map((p) => ({
+  // NOTE: /api/posts?search=X is broken upstream — always returns pinned posts.
+  // Fetch all manga via /api/query and filter client-side.
+  const allPosts = await fetchAllPosts();
+  const q = keyword.toLowerCase();
+  const matched = allPosts.filter((p) =>
+    (p.postTitle || '').toLowerCase().includes(q) ||
+    (p.slug || '').toLowerCase().includes(q)
+  );
+
+  const total = matched.length;
+  const start = (page - 1) * perPage;
+  const paginated = matched.slice(start, start + perPage);
+
+  const posts = paginated.map((p) => ({
     id: p.id,
     slug: p.slug,
     title: p.postTitle,
@@ -43,7 +55,6 @@ const searchManga = async (query) => {
     chaptersCount: p._count?.chapters || 0,
   }));
 
-  const total = data.totalCount || 0;
   const lastPage = Math.ceil(total / perPage) || 1;
   const result = {
     data: posts,

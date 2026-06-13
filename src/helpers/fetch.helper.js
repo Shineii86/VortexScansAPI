@@ -41,6 +41,20 @@ const fetchPosts = async (params = {}) => {
   return response.json();
 };
 
+// ---- FEATURE: Fetch all manga via /api/query (paginated) ----
+// NOTE: /api/posts?search=X is broken upstream — it ignores the search param
+// and always returns pinned posts. Use this + client-side matching instead.
+const fetchAllPosts = async () => {
+  const allPosts = [];
+  for (let page = 1; page <= 20; page++) {
+    const data = await fetchQuery({ page, perPage: 100 });
+    const posts = data.posts || [];
+    allPosts.push(...posts);
+    if (posts.length < 100) break;
+  }
+  return allPosts;
+};
+
 // ══════════════════════════════════════════════════════════════
 // CHAPTERS
 // ══════════════════════════════════════════════════════════════
@@ -98,7 +112,7 @@ const fetchTeams = async (params = {}) => {
 };
 
 module.exports = {
-  fetchQuery, fetchPosts, fetchChapters, fetchChapter,
+  fetchQuery, fetchPosts, fetchAllPosts, fetchChapters, fetchChapter,
   fetchGenres, fetchCollections, fetchCollectionDetail, fetchTeams,
 };
 

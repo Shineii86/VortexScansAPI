@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.0.1] - 2026-06-13
+
+### Fixed
+- Manga detail lookup (`getMangaBySlug`): upstream `/api/posts?search=X` ignores the search param and always returns pinned posts. Now fetches all manga via `/api/query` (paginated) and matches client-side by slug
+- Manga chapters lookup (`getMangaChapters`): same fix — client-side slug matching from full catalog
+- Search endpoint (`searchManga`): same fix — client-side title/slug filtering from all manga
+- Added `fetchAllPosts()` helper in fetch.helper.js to fetch all manga via paginated `/api/query`
+
 ## [7.0.0] - 2026-06-13
 
 ### Changed (BREAKING)

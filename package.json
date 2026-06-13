@@ -1,6 +1,6 @@
 {
   "name": "vortexscans-api",
-  "version": "5.0.0",
+  "version": "7.0.0",
   "description": "Unofficial REST API for Vortex Scans (vortexscans.org)",
   "main": "server.js",
   "scripts": {

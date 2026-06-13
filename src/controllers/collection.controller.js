@@ -57,28 +57,30 @@ const getCollectionDetail = async (slug) => {
   if (!c) return { error: 'Collection not found', status: 404 };
 
   const result = {
-    id: c.id,
-    slug: c.slug,
-    title: c.title,
-    description: c.description,
-    coverImage: c.coverImage,
-    bannerImage: c.bannerImage,
-    artworkImage: c.artworkImage,
-    totalViews: c.totalViews,
-    likesCount: c.likesCount,
-    worksCount: c.worksCount,
-    tags: c.tags || [],
-    works: (c.works || []).map((w) => ({
-      position: w.position,
-      id: w.post?.id,
-      slug: w.post?.slug,
-      title: w.post?.postTitle,
-      image: w.post?.featuredImage,
-      type: w.post?.seriesType?.toLowerCase(),
-      rating: w.post?.averageRating,
-      totalChapterLikes: w.post?.totalChapterLikes,
-      genres: (w.post?.genres || []).map((g) => ({ id: g.id, name: g.name })),
-    })),
+    data: {
+      id: c.id,
+      slug: c.slug,
+      title: c.title,
+      description: c.description,
+      coverImage: c.coverImage,
+      bannerImage: c.bannerImage,
+      artworkImage: c.artworkImage,
+      totalViews: c.totalViews,
+      likesCount: c.likesCount,
+      worksCount: c.worksCount,
+      tags: c.tags || [],
+      works: (c.works || []).map((w) => ({
+        position: w.position,
+        id: w.post?.id,
+        slug: w.post?.slug,
+        title: w.post?.postTitle,
+        image: w.post?.featuredImage,
+        type: w.post?.seriesType?.toLowerCase(),
+        rating: w.post?.averageRating,
+        totalChapterLikes: w.post?.totalChapterLikes,
+        genres: (w.post?.genres || []).map((g) => ({ id: g.id, name: g.name })),
+      })),
+    },
   };
 
   cache.set(cacheKey, result, CACHE_TTL.COLLECTIONS);

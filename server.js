@@ -220,6 +220,14 @@ app.get("/api/v1/manga", async (req, res) => {
   } catch (e) { fail(res, e.message); }
 });
 
+app.get("/api/v1/manga/:slug", async (req, res) => {
+  try {
+    const r = await getMangaBySlug(req.params.slug, req.query);
+    if (r.error) return fail(res, r.error, r.status);
+    success(res, r.data, r.pagination);
+  } catch (e) { fail(res, e.message); }
+});
+
 // ---- Chapters (RESTful alias) ----
 app.get("/api/v1/manga/:slug/chapters", async (req, res) => {
   try {
